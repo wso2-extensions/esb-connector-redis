@@ -1,0 +1,4 @@
+{
+    "redisOldKey":"%s(key)",
+    "redisNewKey":"%s(renameKey1)"
+}

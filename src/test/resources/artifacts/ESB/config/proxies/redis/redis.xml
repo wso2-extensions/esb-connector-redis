@@ -1,0 +1,551 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+   Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+
+   WSO2 Inc. licenses this file to you under the Apache License,
+   Version 2.0 (the "License"); you may not use this file except
+   in compliance with the License.
+   You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing,
+   software distributed under the License is distributed on an
+   "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+   KIND, either express or implied. See the License for the
+   specific language governing permissions and limitations
+   under the License.
+-->
+
+<proxy xmlns="http://ws.apache.org/ns/synapse"
+       name="redis"
+       startOnLoad="true"
+       statistics="disable"
+       trace="disable"
+       transports="http,https">
+    <target>
+        <inSequence>
+            <property name="redisHost" expression="json-eval($.redisHost)"/>
+            <property name="redisPort" expression="json-eval($.redisPort)"/>
+            <property name="redisTimeout" expression="json-eval($.redisTimeout)"/>
+            <property name="redisKey" expression="json-eval($.redisKey)"/>
+            <property name="redisValue" expression="json-eval($.redisValue)"/>
+            <property name="redisKeysValues" expression="json-eval($.redisKeysValues)"/>
+            <property name="redisStart" expression="json-eval($.redisStart)"/>
+            <property name="redisEnd" expression="json-eval($.redisEnd)"/>
+            <property name="redisIndex" expression="json-eval($.redisIndex)"/>
+            <property name="redisCount" expression="json-eval($.redisCount)"/>
+            <property name="redisStrings" expression="json-eval($.redisStrings)"/>
+            <property name="redisString" expression="json-eval($.redisString)"/>
+            <property name="redisPattern" expression="json-eval($.redisPattern)"/>
+            <property name="redisInteger" expression="json-eval($.redisInteger)"/>
+            <property name="redisField" expression="json-eval($.redisField)"/>
+            <property name="redisFields" expression="json-eval($.redisFields)"/>
+            <property name="redisFieldsValues" expression="json-eval($.redisFieldsValues)"/>
+            <property name="redisUnixTime" expression="json-eval($.redisUnixTime)"/>
+            <property name="redisSeconds" expression="json-eval($.redisSeconds)"/>
+            <property name="redisBrPopTimeout" expression="json-eval($.redisBrPopTimeout)"/>
+            <property name="redisBlPopTimeout" expression="json-eval($.redisBlPopTimeout)"/>
+            <property name="redisMembers" expression="json-eval($.redisMembers)"/>
+            <property name="redisSrcKey" expression="json-eval($.redisSrcKey)"/>
+            <property name="redisDstKey" expression="json-eval($.redisDstKey)"/>
+            <property name="redisMember" expression="json-eval($.redisMember)"/>
+            <property name="redisOldKey" expression="json-eval($.redisOldKey)"/>
+            <property name="redisNewKey" expression="json-eval($.redisNewKey)"/>
+            <property name="redisMin" expression="json-eval($.redisMin)"/>
+            <property name="redisMax" expression="json-eval($.redisMax)"/>
+            <property name="redisScore" expression="json-eval($.redisScore)"/>
+            <property name="redisSets" expression="json-eval($.redisSets)"/>
+            <property name="redisOffset" expression="json-eval($.redisOffset)"/>
+            <property name="redisMessage" expression="json-eval($.redisMessage)"/>
+            <property name="redisWhere" expression="json-eval($.redisWhere)"/>
+            <property name="redisPivot" expression="json-eval($.redisPivot)"/>
+            <redis.init>
+                <redisHost>{$ctx:redisHost}</redisHost>
+                <redisPort>{$ctx:redisPort}</redisPort>
+                <redisTimeout>{$ctx:redisTimeout}</redisTimeout>
+            </redis.init>
+            <switch source="get-property('transport', 'Action')">
+                <case regex="urn:append">
+                    <redis.append>
+                        <redisKey>{$ctx:redisKey}</redisKey>
+                        <redisValue>{$ctx:redisValue}</redisValue>
+                    </redis.append>
+                </case>
+                <case regex="urn:blPop">
+                    <redis.blPop>
+                        <redisKey>{$ctx:redisKey}</redisKey>
+                        <redisBlPopTimeout>{$ctx:redisBlPopTimeout}</redisBlPopTimeout>
+                    </redis.blPop>
+                </case>
+                <case regex="urn:brPop">
+                    <redis.brPop>
+                        <redisKey>{$ctx:redisKey}</redisKey>
+                        <redisBrPopTimeout>{$ctx:redisBrPopTimeout}</redisBrPopTimeout>
+                    </redis.brPop>
+                </case>
+                <case regex="urn:decrBy">
+                    <redis.decrBy>
+                        <redisKey>{$ctx:redisKey}</redisKey>
+                        <redisInteger>{$ctx:redisInteger}</redisInteger>
+                    </redis.decrBy>
+                </case>
+                <case regex="urn:del">
+                    <redis.del>
+                        <redisKey>{$ctx:redisKey}</redisKey>
+                    </redis.del>
+                </case>
+                <case regex="urn:echo">
+                    <redis.echo>
+                        <redisMessage>{$ctx:redisMessage}</redisMessage>
+                    </redis.echo>
+                </case>
+                <case regex="urn:exists">
+                    <redis.exists>
+                        <redisKey>{$ctx:redisKey}</redisKey>
+                    </redis.exists>
+                </case>
+                <case regex="urn:expire">
+                    <redis.expire>
+                        <redisKey>{$ctx:redisKey}</redisKey>
+                        <redisSeconds>{$ctx:redisSeconds}</redisSeconds>
+                    </redis.expire>
+                </case>
+                <case regex="urn:expireAt">
+                    <redis.expireAt>
+                        <redisKey>{$ctx:redisKey}</redisKey>
+                        <redisUnixTime>{$ctx:redisUnixTime}</redisUnixTime>
+                    </redis.expireAt>
+                </case>
+                <case regex="urn:flushAll">
+                    <redis.flushAll/>
+                </case>
+                <case regex="urn:flushDB">
+                    <redis.flushDB/>
+                </case>
+                <case regex="urn:get">
+                    <redis.get>
+                        <redisKey>{$ctx:redisKey}</redisKey>
+                    </redis.get>
+                </case>
+                <case regex="urn:getSet">
+                    <redis.getSet>
+                        <redisKey>{$ctx:redisKey}</redisKey>
+                        <redisValue>{$ctx:redisValue}</redisValue>
+                    </redis.getSet>
+                </case>
+                <case regex="urn:hDel">
+                    <redis.hDel>
+                        <redisKey>{$ctx:redisKey}</redisKey>
+                        <redisFields>{$ctx:redisFields}</redisFields>
+                    </redis.hDel>
+                </case>
+                <case regex="urn:hExists">
+                    <redis.hExists>
+                        <redisKey>{$ctx:redisKey}</redisKey>
+                        <redisField>{$ctx:redisField}</redisField>
+                    </redis.hExists>
+                </case>
+                <case regex="urn:hGet">
+                    <redis.hGet>
+                        <redisKey>{$ctx:redisKey}</redisKey>
+                        <redisField>{$ctx:redisField}</redisField>
+                    </redis.hGet>
+                </case>
+                <case regex="urn:hGetAll">
+                    <redis.hGetAll>
+                        <redisKey>{$ctx:redisKey}</redisKey>
+                    </redis.hGetAll>
+                </case>
+                <case regex="urn:hIncrBy">
+                    <redis.hIncrBy>
+                        <redisKey>{$ctx:redisKey}</redisKey>
+                        <redisField>{$ctx:redisField}</redisField>
+                        <redisValue>{$ctx:redisValue}</redisValue>
+                    </redis.hIncrBy>
+                </case>
+                <case regex="urn:hKeys">
+                    <redis.hKeys>
+                        <redisKey>{$ctx:redisKey}</redisKey>
+                    </redis.hKeys>
+                </case>
+                <case regex="urn:hLen">
+                    <redis.hLen>
+                        <redisKey>{$ctx:redisKey}</redisKey>
+                    </redis.hLen>
+                </case>
+                <case regex="urn:hMGet">
+                    <redis.hMGet>
+                        <redisKey>{$ctx:redisKey}</redisKey>
+                        <redisFields>{$ctx:redisFields}</redisFields>
+                    </redis.hMGet>
+                </case>
+                <case regex="urn:hMSet">
+                    <redis.hMSet>
+                        <redisKey>{$ctx:redisKey}</redisKey>
+                        <redisFieldsValues>{$ctx:redisFieldsValues}</redisFieldsValues>
+                    </redis.hMSet>
+                </case>
+                <case regex="urn:hSet">
+                    <redis.hSet>
+                        <redisKey>{$ctx:redisKey}</redisKey>
+                        <redisField>{$ctx:redisField}</redisField>
+                        <redisValue>{$ctx:redisValue}</redisValue>
+                    </redis.hSet>
+                </case>
+                <case regex="urn:hSetnX">
+                    <redis.hSetnX>
+                        <redisKey>{$ctx:redisKey}</redisKey>
+                        <redisField>{$ctx:redisField}</redisField>
+                        <redisValue>{$ctx:redisValue}</redisValue>
+                    </redis.hSetnX>
+                </case>
+                <case regex="urn:hVals">
+                    <redis.hVals>
+                        <redisKey>{$ctx:redisKey}</redisKey>
+                    </redis.hVals>
+                </case>
+                <case regex="urn:incrBy">
+                    <redis.incrBy>
+                        <redisKey>{$ctx:redisKey}</redisKey>
+                        <redisInteger>{$ctx:redisInteger}</redisInteger>
+                    </redis.incrBy>
+                </case>
+                <case regex="urn:keys">
+                    <redis.keys>
+                        <redisPattern>{$ctx:redisPattern}</redisPattern>
+                    </redis.keys>
+                </case>
+                <case regex="urn:lInsert">
+                    <redis.lInsert>
+                        <redisKey>{$ctx:redisKey}</redisKey>
+                        <redisWhere>{$ctx:redisWhere}</redisWhere>
+                        <redisPivot>{$ctx:redisPivot}</redisPivot>
+                        <redisValue>{$ctx:redisValue}</redisValue>
+                    </redis.lInsert>
+                </case>
+                <case regex="urn:lLen">
+                    <redis.lLen>
+                        <redisKey>{$ctx:redisKey}</redisKey>
+                    </redis.lLen>
+                </case>
+                <case regex="urn:lPop">
+                    <redis.lPop>
+                        <redisKey>{$ctx:redisKey}</redisKey>
+                    </redis.lPop>
+                </case>
+                <case regex="urn:lPush">
+                    <redis.lPush>
+                        <redisKey>{$ctx:redisKey}</redisKey>
+                        <redisStrings>{$ctx:redisStrings}</redisStrings>
+                    </redis.lPush>
+                </case>
+                <case regex="urn:lPushX">
+                    <redis.lPushX>
+                        <redisKey>{$ctx:redisKey}</redisKey>
+                        <redisString>{$ctx:redisString}</redisString>
+                    </redis.lPushX>
+                </case>
+                <case regex="urn:lRange">
+                    <redis.lRange>
+                        <redisKey>{$ctx:redisKey}</redisKey>
+                        <redisStart>{$ctx:redisStart}</redisStart>
+                        <redisEnd>{$ctx:redisEnd}</redisEnd>
+                    </redis.lRange>
+                </case>
+                <case regex="urn:lRem">
+                    <redis.lRem>
+                        <redisKey>{$ctx:redisKey}</redisKey>
+                        <redisCount>{$ctx:redisCount}</redisCount>
+                        <redisValue>{$ctx:redisValue}</redisValue>
+                    </redis.lRem>
+                </case>
+                <case regex="urn:lSet">
+                    <redis.lSet>
+                        <redisKey>{$ctx:redisKey}</redisKey>
+                        <redisIndex>{$ctx:redisIndex}</redisIndex>
+                        <redisValue>{$ctx:redisValue}</redisValue>
+                    </redis.lSet>
+                </case>
+                <case regex="urn:lTrim">
+                    <redis.lTrim>
+                        <redisKey>{$ctx:redisKey}</redisKey>
+                        <redisStart>{$ctx:redisStart}</redisStart>
+                        <redisEnd>{$ctx:redisEnd}</redisEnd>
+                    </redis.lTrim>
+                </case>
+                <case regex="urn:mGet">
+                    <redis.mGet>
+                        <redisKey>{$ctx:redisKey}</redisKey>
+                    </redis.mGet>
+                </case>
+                <case regex="urn:mSet">
+                    <redis.mSet>
+                        <redisKeysValues>{$ctx:redisKeysValues}</redisKeysValues>
+                    </redis.mSet>
+                </case>
+                <case regex="urn:mSetnX">
+                    <redis.mSetnX>
+                        <redisKeysValues>{$ctx:redisKeysValues}</redisKeysValues>
+                    </redis.mSetnX>
+                </case>
+                <case regex="urn:ping">
+                    <redis.ping/>
+                </case>
+                <case regex="urn:quit">
+                    <redis.quit/>
+                </case>
+                <case regex="urn:randomKey">
+                    <redis.randomKey/>
+                </case>
+                <case regex="urn:rename">
+                    <redis.rename>
+                        <redisOldKey>{$ctx:redisOldKey}</redisOldKey>
+                        <redisNewKey>{$ctx:redisNewKey}</redisNewKey>
+                    </redis.rename>
+                </case>
+                <case regex="urn:renamenX">
+                    <redis.renamenX>
+                        <redisOldKey>{$ctx:redisOldKey}</redisOldKey>
+                        <redisNewKey>{$ctx:redisNewKey}</redisNewKey>
+                    </redis.renamenX>
+                </case>
+                <case regex="urn:rPopLPush">
+                    <redis.rPopLPush>
+                        <redisSrcKey>{$ctx:redisSrcKey}</redisSrcKey>
+                        <redisDstKey>{$ctx:redisDstKey}</redisDstKey>
+                    </redis.rPopLPush>
+                </case>
+                <case regex="urn:rPush">
+                    <redis.rPush>
+                        <redisKey>{$ctx:redisKey}</redisKey>
+                        <redisStrings>{$ctx:redisStrings}</redisStrings>
+                    </redis.rPush>
+                </case>
+                <case regex="urn:rPushX">
+                    <redis.rPushX>
+                        <redisKey>{$ctx:redisKey}</redisKey>
+                        <redisValue>{$ctx:redisValue}</redisValue>
+                    </redis.rPushX>
+                </case>
+                <case regex="urn:sadd">
+                    <redis.sadd>
+                        <redisKey>{$ctx:redisKey}</redisKey>
+                        <redisMembers>{$ctx:redisMembers}</redisMembers>
+                    </redis.sadd>
+                </case>
+                <case regex="urn:sDiffStore">
+                    <redis.sDiffStore>
+                        <redisKey>{$ctx:redisKey}</redisKey>
+                        <redisDstKey>{$ctx:redisDstKey}</redisDstKey>
+                    </redis.sDiffStore>
+                </case>
+                <case regex="urn:set">
+                    <redis.set>
+                        <redisKey>{$ctx:redisKey}</redisKey>
+                        <redisValue>{$ctx:redisValue}</redisValue>
+                    </redis.set>
+                </case>
+                <case regex="urn:setBit">
+                    <redis.setBit>
+                        <redisKey>{$ctx:redisKey}</redisKey>
+                        <redisOffset>{$ctx:redisOffset}</redisOffset>
+                        <redisValue>{$ctx:redisValue}</redisValue>
+                    </redis.setBit>
+                </case>
+                <case regex="urn:setnX">
+                    <redis.setnX>
+                        <redisKey>{$ctx:key}</redisKey>
+                        <redisValue>{$ctx:redisValue}</redisValue>
+                    </redis.setnX>
+                </case>
+                <case regex="urn:setRange">
+                    <redis.setRange>
+                        <redisKey>{$ctx:redisKey}</redisKey>
+                        <redisValue>{$ctx:redisValue}</redisValue>
+                        <redisOffset>{$ctx:redisOffset}</redisOffset>
+                    </redis.setRange>
+                </case>
+                <case regex="urn:sInter">
+                    <redis.sInter>
+                        <redisKey>{$ctx:redisKey}</redisKey>
+                    </redis.sInter>
+                </case>
+                <case regex="urn:sInterStore">
+                    <redis.sInterStore>
+                        <redisKey>{$ctx:redisKey}</redisKey>
+                        <redisDstKey>{$ctx:redisDstKey}</redisDstKey>
+                    </redis.sInterStore>
+                </case>
+                <case regex="urn:sIsMember">
+                    <redis.sIsMember>
+                        <redisKey>{$ctx:redisKey}</redisKey>
+                        <redisMember>{$ctx:redisMember}</redisMember>
+                    </redis.sIsMember>
+                </case>
+                <case regex="urn:sMembers">
+                    <redis.sMembers>
+                        <redisKey>{$ctx:redisKey}</redisKey>
+                    </redis.sMembers>
+                </case>
+                <case regex="urn:sMove">
+                    <redis.sMove>
+                        <redisSrcKey>{$ctx:redisSrcKey}</redisSrcKey>
+                        <redisDstKey>{$ctx:redisDstKey}</redisDstKey>
+                        <redisMember>{$ctx:redisMember}</redisMember>
+                    </redis.sMove>
+                </case>
+                <case regex="urn:sPop">
+                    <redis.sPop>
+                        <redisKey>{$ctx:redisKey}</redisKey>
+                    </redis.sPop>
+                </case>
+                <case regex="urn:sRandMember">
+                    <redis.sRandMember>
+                        <redisKey>{$ctx:redisKey}</redisKey>
+                    </redis.sRandMember>
+                </case>
+                <case regex="urn:sRem">
+                    <redis.sRem>
+                        <redisKey>{$ctx:redisKey}</redisKey>
+                        <redisMembers>{$ctx:redisMembers}</redisMembers>
+                    </redis.sRem>
+                </case>
+                <case regex="urn:strLen">
+                    <redis.strLen>
+                        <redisKey>{$ctx:redisKey}</redisKey>
+                    </redis.strLen>
+                </case>
+                <case regex="urn:getRange">
+                    <redis.getRange>
+                        <redisKey>{$ctx:redisKey}</redisKey>
+                        <redisStart>{$ctx:redisStart}</redisStart>
+                        <redisEnd>{$ctx:redisEnd}</redisEnd>
+                    </redis.getRange>
+                </case>
+                <case regex="urn:sUnion">
+                    <redis.sUnion>
+                        <redisKey>{$ctx:redisKey}</redisKey>
+                    </redis.sUnion>
+                </case>
+                <case regex="urn:sUnionStore">
+                    <redis.sUnionStore>
+                        <redisKey>{$ctx:redisKey}</redisKey>
+                        <redisDstKey>{$ctx:redisDstKey}</redisDstKey>
+                    </redis.sUnionStore>
+                </case>
+                <case regex="urn:ttl">
+                    <redis.ttl>
+                        <redisKey>{$ctx:redisKey}</redisKey>
+                    </redis.ttl>
+                </case>
+                <case regex="urn:type">
+                    <redis.type>
+                        <redisKey>{$ctx:redisKey}</redisKey>
+                    </redis.type>
+                </case>
+                <case regex="urn:zadd">
+                    <redis.zadd>
+                        <redisKey>{$ctx:redisKey}</redisKey>
+                        <redisScore>{$ctx:redisScore}</redisScore>
+                        <redisMember>{$ctx:redisMember}</redisMember>
+                    </redis.zadd>
+                </case>
+                <case regex="urn:zCount">
+                    <redis.zCount>
+                        <redisKey>{$ctx:redisKey}</redisKey>
+                        <redisMin>{$ctx:redisMin}</redisMin>
+                        <redisMax>{$ctx:redisMax}</redisMax>
+                    </redis.zCount>
+                </case>
+                <case regex="urn:zIncrBy">
+                    <redis.zIncrBy>
+                        <redisKey>{$ctx:redisKey}</redisKey>
+                        <redisScore>{$ctx:redisScore}</redisScore>
+                        <redisMember>{$ctx:redisMember}</redisMember>
+                    </redis.zIncrBy>
+                </case>
+                <case regex="urn:zInterStore">
+                    <redis.zInterStore>
+                        <redisKey>{$ctx:redisKey}</redisKey>
+                        <redisSets>{$ctx:redisSets}</redisSets>
+                    </redis.zInterStore>
+                </case>
+                <case regex="urn:zRange">
+                    <redis.zRange>
+                        <redisKey>{$ctx:redisKey}</redisKey>
+                        <redisStart>{$ctx:redisStart}</redisStart>
+                        <redisEnd>{$ctx:redisEnd}</redisEnd>
+                    </redis.zRange>
+                </case>
+                <case regex="urn:zRangeByScore">
+                    <redis.zRangeByScore>
+                        <redisKey>{$ctx:redisKey}</redisKey>
+                        <redisMin>{$ctx:redisMin}</redisMin>
+                        <redisMax>{$ctx:redisMax}</redisMax>
+                    </redis.zRangeByScore>
+                </case>
+                <case regex="urn:zRank">
+                    <redis.zRank>
+                        <redisKey>{$ctx:redisKey}</redisKey>
+                        <redisMember>{$ctx:redisMember}</redisMember>
+                    </redis.zRank>
+                </case>
+                <case regex="urn:zRem">
+                    <redis.zRem>
+                        <redisKey>{$ctx:redisKey}</redisKey>
+                        <redisMembers>{$ctx:redisMembers}</redisMembers>
+                    </redis.zRem>
+                </case>
+                <case regex="urn:zRemRangeByRank">
+                    <redis.zRemRangeByRank>
+                        <redisKey>{$ctx:redisKey}</redisKey>
+                        <redisStart>{$ctx:redisStart}</redisStart>
+                        <redisEnd>{$ctx:redisEnd}</redisEnd>
+                    </redis.zRemRangeByRank>
+                </case>
+                <case regex="urn:zRemRangeByScore">
+                    <redis.zRemRangeByScore>
+                        <redisKey>{$ctx:redisKey}</redisKey>
+                        <redisStart>{$ctx:redisStart}</redisStart>
+                        <redisEnd>{$ctx:redisEnd}</redisEnd>
+                    </redis.zRemRangeByScore>
+                </case>
+                <case regex="urn:zRevRange">
+                    <redis.zRevRange>
+                        <redisKey>{$ctx:redisKey}</redisKey>
+                        <redisStart>{$ctx:redisStart}</redisStart>
+                        <redisEnd>{$ctx:redisEnd}</redisEnd>
+                    </redis.zRevRange>
+                </case>
+                <case regex="urn:zRevRangeByScore">
+                    <redis.zRevRangeByScore>
+                        <redisKey>{$ctx:redisKey}</redisKey>
+                        <redisMin>{$ctx:redisMin}</redisMin>
+                        <redisMax>{$ctx:redisMax}</redisMax>
+                    </redis.zRevRangeByScore>
+                </case>
+                <case regex="urn:zRevRank">
+                    <redis.zRevRank>
+                        <redisKey>{$ctx:redisKey}</redisKey>
+                        <redisMember>{$ctx:redisMember}</redisMember>
+                    </redis.zRevRank>
+                </case>
+                <case regex="urn:zScore">
+                    <redis.zScore>
+                        <redisKey>{$ctx:redisKey}</redisKey>
+                        <redisMember>{$ctx:redisMember}</redisMember>
+                    </redis.zScore>
+                </case>
+                <case regex="urn:zUnionStore">
+                    <redis.zUnionStore>
+                        <redisKey>{$ctx:redisKey}</redisKey>
+                        <redisSets>{$ctx:redisSets}</redisSets>
+                    </redis.zUnionStore>
+                </case>
+            </switch>
+            <respond/>
+        </inSequence>
+    </target>
+    <description/>
+</proxy>

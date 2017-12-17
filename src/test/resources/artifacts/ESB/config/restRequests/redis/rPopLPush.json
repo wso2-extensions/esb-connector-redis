@@ -1,0 +1,4 @@
+{
+    "redisSrcKey":"%s(mylist1)",
+    "redisDstKey":"%s(mylist)"
+}

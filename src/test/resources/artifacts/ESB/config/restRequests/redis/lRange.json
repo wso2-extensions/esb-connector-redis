@@ -1,0 +1,5 @@
+{
+    "redisKey":"%s(mylist)",
+    "redisStart":"%s(lRangestart)",
+    "redisEnd":"%s(lRangeend)"
+}

@@ -1,0 +1,4 @@
+{
+    "redisKey":"%s(zaddkey)",
+    "redisMember":"%s(zaddmember)"
+}

@@ -1,0 +1,5 @@
+{
+    "redisKey":"%s(setBitkey)",
+    "redisOffset":"%s(offset)",
+    "redisValue":"%s(setBitvalue)"
+}

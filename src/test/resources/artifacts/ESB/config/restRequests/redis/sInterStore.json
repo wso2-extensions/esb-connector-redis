@@ -1,0 +1,4 @@
+{
+    "redisKey":"%s(saddkeys)",
+    "redisDstKey":"%s(sInterStore)"
+}

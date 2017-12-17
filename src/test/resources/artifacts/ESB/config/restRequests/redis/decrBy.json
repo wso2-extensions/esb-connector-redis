@@ -1,0 +1,4 @@
+{
+    "redisKey":"%s(numkey)",
+    "redisInteger":"%s(integer)"
+}

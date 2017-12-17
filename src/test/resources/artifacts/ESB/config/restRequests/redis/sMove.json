@@ -1,0 +1,5 @@
+{
+    "redisSrcKey":"%s(saddkey1)",
+    "redisDstKey":"%s(saddkey2)",
+    "redisMember":"%s(a)"
+}

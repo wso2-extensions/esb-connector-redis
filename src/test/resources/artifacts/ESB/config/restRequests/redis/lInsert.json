@@ -1,0 +1,6 @@
+{
+    "redisKey":"%s(mylist)",
+    "redisWhere":"%s(where)",
+    "redisPivot":"%s(pivot)",
+    "redisValue":"%s(lInsertvalue)"
+}

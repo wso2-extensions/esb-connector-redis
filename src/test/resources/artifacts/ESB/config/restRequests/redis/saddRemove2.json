@@ -1,0 +1,4 @@
+{
+    "redisKey":"%s(saddkey2)",
+    "redisMembers":"%s(saddkey2value)"
+}

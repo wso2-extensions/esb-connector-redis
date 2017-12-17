@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+   Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+
+   WSO2 Inc. licenses this file to you under the Apache License,
+   Version 2.0 (the "License"); you may not use this file except
+   in compliance with the License.
+   You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing,
+   software distributed under the License is distributed on an
+   "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+   KIND, either express or implied. See the License for the
+   specific language governing permissions and limitations
+   under the License.
+-->
+
+<component name="lists" type="synapse/template">
+    <subComponents>
+        <component name="blPop">
+            <file>blPop.xml</file>
+            <description>remove and get the first element in a list or block until one is available</description>
+        </component>
+        <component name="brPop">
+            <file>brPop.xml</file>
+            <description>remove an get the element in a list or block one is available</description>
+        </component>
+        <component name="lInsert">
+            <file>lInsert.xml</file>
+            <description>insert an element before or after another element in a list</description>
+        </component>
+        <component name="lLen">
+            <file>lLen.xml</file>
+            <description>get a length of a list</description>
+        </component>
+        <component name="lPop">
+            <file>lPop.xml</file>
+            <description>remove and get the first element in a list</description>
+        </component>
+        <component name="lPush">
+            <file>lPush.xml</file>
+            <description>prepend one or multiple values to a list</description>
+        </component>
+        <component name="lPushX">
+            <file>lPushX.xml</file>
+            <description>prepend a value of an element in a list by its index</description>
+        </component>
+        <component name="lRange">
+            <file>lRange.xml</file>
+            <description>get a range of elements from a list</description>
+        </component>
+        <component name="lRem">
+            <file>lRem.xml</file>
+            <description>remove element from a list</description>
+        </component>
+        <component name="lSet">
+            <file>lSet.xml</file>
+            <description>set the value of an element in a list by it's index</description>
+        </component>
+        <component name="lTrim">
+            <file>lTrim.xml</file>
+            <description>trim a list to the specified range</description>
+        </component>
+        <component name="rPopLPush">
+            <file>rPopLPush.xml</file>
+            <description>remove the list element in a list, prepend it to another list and return it</description>
+        </component>
+        <component name="rPush">
+            <file>rPush.xml</file>
+            <description>append one or more multiple values to a list</description>
+        </component>
+        <component name="rPushX">
+            <file>rPushX.xml</file>
+            <description>append a value to a list, only if the list exists</description>
+        </component>
+    </subComponents>
+</component>

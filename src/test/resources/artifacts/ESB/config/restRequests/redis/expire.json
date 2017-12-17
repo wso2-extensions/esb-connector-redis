@@ -1,0 +1,4 @@
+{
+    "redisKey":"%s(renameKey2)",
+    "redisSeconds":"%s(seconds)"
+}

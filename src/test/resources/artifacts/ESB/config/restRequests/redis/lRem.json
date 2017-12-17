@@ -1,0 +1,5 @@
+{
+    "redisKey":"%s(mylist)",
+    "redisCount":"%s(start)",
+    "redisValue":"%s(lRemvalue)"
+}
