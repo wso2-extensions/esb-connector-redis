@@ -9,9 +9,9 @@ For a sample proxy service that illustrates how to work with connection commands
 
 | Operation        | Description |
 | ------------- |:-------------|
-| [echo](#echo)    | Returns a specified string |
-| [ping](#ping)    | Pings the server |
-| [quit](#quit)    | Closes the connection |
+| [echo](#echoing-messages)    | Returns a specified string |
+| [ping](#pinging-the-server)    | Pings the server |
+| [quit](#closing-the-connection)    | Closes the connection |
 
 ### Operation details
 This section provides more details on the operations.
@@ -59,7 +59,7 @@ A sample request with an empty body can be handled by the ping operation.
 
 [https://redis.io/commands/ping](https://redis.io/commands/ping)
 
-#### Closing a connection
+#### Closing the connection
 The quit operation closes the connection to the server.
 
 **quit**
