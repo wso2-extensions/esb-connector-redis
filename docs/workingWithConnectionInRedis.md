@@ -3,21 +3,21 @@
 [[  Overview ]](#overview)  [[ Operation details ]](#operation-details)  [[  Sample configuration  ]](#sample-configuration)
 
 ### Overview 
-The following operations allow you to work with "connection". Click an operation name to see details on how to use it.
+The following operations allow you to work with connection commands. Click an operation name to see details on how to use it.
 
-For a sample proxy service that illustrates how to work with "connection", see [  sample configuration  ](#sample-configuration).
+For a sample proxy service that illustrates how to work with connection commands, see [sample configuration](#sample-configuration).
 
 | Operation        | Description |
 | ------------- |:-------------|
-| [echo](#echo)    | Echo the given string |
-| [ping](#ping)    | Ping the server |
-| [quit](#quit)    | Close the connection |
+| [echo](#echo)    | Returns a specified string |
+| [ping](#ping)    | Pings the server |
+| [quit](#quit)    | Closes the connection |
 
 ### Operation details
-This section provides details on the operations.
+This section provides more details on the operations.
 
-#### Echo
-The echo operation is used to echo the given string.
+#### Echoing messages
+The echo operation returns a specified string.
 
 **echo**
 ```xml
@@ -27,11 +27,11 @@ The echo operation is used to echo the given string.
 ```
 
 **Properties**
-* redisMessage: The message, which we want to print.
+* redisMessage: The message that you want to echo.
 
 **Sample request**
 
-Following is a sample REST/JSON request that can be handled by the append operation.
+Following is a sample REST/JSON request that can be handled by the echo operation.
 
 ```json
 {
@@ -43,8 +43,8 @@ Following is a sample REST/JSON request that can be handled by the append operat
 
 [https://redis.io/commands/echo](https://redis.io/commands/echo)
 
-#### Ping
-The ping operation is used to ping the server.
+#### Pinging the server
+The ping operation pings the server to verify whether the connection is still alive.
 
 **ping**
 ```xml
@@ -53,14 +53,14 @@ The ping operation is used to ping the server.
 
 **Sample request**
 
-Sample request with empty body can be handled by the ping operation.
+A sample request with an empty body can be handled by the ping operation.
 
 **Related redis documentation**
 
 [https://redis.io/commands/ping](https://redis.io/commands/ping)
 
-#### Quit
-The quit operation is used to close the connection.
+#### Closing a connection
+The quit operation closes the connection to the server.
 
 **quit**
 ```xml
@@ -69,14 +69,14 @@ The quit operation is used to close the connection.
 
 **Sample request**
 
-Sample request with empty body can be handled by the quit operation.
+A sample request with an empty body can be handled by the quit operation.
 
 **Related redis documentation**
 
 [https://redis.io/commands/quit](https://redis.io/commands/quit)
 
 ### Sample configuration
-Following is a sample proxy service that illustrates how to connect to Redis with the init operation and use the echo operation. The sample request for this proxy can be found in [echo sample request](#request). You can use this sample as a template for using other operations in this category.
+Following is a sample proxy service that illustrates how to connect to Redis with the init operation, and then use the echo operation. The sample request for this proxy can be found in [echo sample request](#request). You can use this sample as a template for using other operations in this category.
 
 **Sample Proxy**
 ```xml
