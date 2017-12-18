@@ -1,0 +1,29 @@
+Product: Integration tests for WSO2 EI redis connector
+
+Pre-requisites:
+
+ - Maven 3.x
+ - Java 1.8
+ - The org.wso2.esb.integration.integration-base project is required. The test suite has been configured to download this project automatically. If the automatic download fails, download the following project and compile it using the mvn clean install command to update your local repository:
+    https://github.com/wso2-extensions/esb-connector-integrationbase
+
+Tested Platform:
+ - UBUNTU 16.04
+ - WSO2 EI 6.1.1
+
+Steps to follow in setting integration test.
+
+ 1. Download EI WSO2 EI 6.1.1 from official website.
+
+ 2. Download "jedis-2.1.0.jar" from https://mvnrepository.com/artifact/redis.clients/jedis/2.1.0
+
+ 3. Extract EI pack and put the "jedis-2.1.0.jar" into "{EI_Home}/lib"
+
+ 4. Compress the EI pack and place the zip file at the location "<REDIS_CONNECTOR_HOME>/repository/"
+
+ 5. Download Redis server from http://redis.io/download
+
+ 6. Start the Redis server
+
+ 7. Navigate to "{EI_Connector_Home}/" and run the following command.
+	  $ mvn clean install -Dskip-tests=false

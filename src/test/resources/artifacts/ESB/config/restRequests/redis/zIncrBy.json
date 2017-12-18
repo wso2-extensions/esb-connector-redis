@@ -1,0 +1,5 @@
+{
+    "redisKey":"%s(zaddkey)",
+    "redisScore":"%s(zaddscore)",
+    "redisMember":"%s(zaddmember)"
+}

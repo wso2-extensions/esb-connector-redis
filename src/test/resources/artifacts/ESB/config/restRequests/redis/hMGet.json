@@ -1,0 +1,4 @@
+{
+    "redisKey":"%s(hashkey1)",
+    "redisFields":"%s(fields)"
+}

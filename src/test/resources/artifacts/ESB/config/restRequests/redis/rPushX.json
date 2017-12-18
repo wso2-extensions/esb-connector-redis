@@ -1,0 +1,4 @@
+{
+    "redisKey":"%s(mylist)",
+    "redisValue":"%s(rPushXstring)"
+}

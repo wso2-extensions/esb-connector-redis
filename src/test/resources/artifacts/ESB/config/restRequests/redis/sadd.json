@@ -1,0 +1,4 @@
+{
+    "redisKey":"%s(renameKey1)",
+    "redisMembers":"%s(saddvalue)"
+}

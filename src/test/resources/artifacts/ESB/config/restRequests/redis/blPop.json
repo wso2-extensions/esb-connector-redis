@@ -1,0 +1,4 @@
+{
+    "redisKey":"%s(popkeys)",
+    "redisBlPopTimeout":"%s(popTimeout)"
+}

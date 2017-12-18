@@ -1,0 +1,5 @@
+{
+    "redisKey":"%s(key)",
+    "redisStart":"%s(start)",
+    "redisEnd":"%s(end)"
+}

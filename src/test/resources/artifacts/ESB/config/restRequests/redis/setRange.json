@@ -1,0 +1,5 @@
+{
+    "redisKey":"%s(key)",
+    "redisOffset":"%s(offset)",
+    "redisValue":"%s(setRangevalue)"
+}

@@ -1,0 +1,4 @@
+{
+    "redisKey":"%s(mylist1)",
+    "redisStrings":"%s(mylist1value)"
+}

@@ -1,0 +1,5 @@
+{
+    "redisKey":"%s(mylist1value)",
+    "redisStart":"%s(start)",
+    "redisEnd":"%s(end)"
+}
