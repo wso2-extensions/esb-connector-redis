@@ -37,6 +37,8 @@ public class Get extends AbstractConnector {
                 String response = jedis.get(key);
                 if (response != null) {
                     messageContext.setProperty(RedisConstants.RESULT, response);
+                } else {
+                    handleException("Redis server throw null response", messageContext);
                 }
                 jedis.disconnect();
             }

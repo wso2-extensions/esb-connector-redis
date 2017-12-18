@@ -42,6 +42,8 @@ public class BlPop extends AbstractConnector {
                 List<String> response = jedis.blpop(blPopTimeout, keyValue);
                 if (response != null) {
                     messageContext.setProperty(RedisConstants.RESULT, response.toString());
+                } else {
+                    handleException("Redis server throw null response", messageContext);
                 }
                 jedis.disconnect();
             }

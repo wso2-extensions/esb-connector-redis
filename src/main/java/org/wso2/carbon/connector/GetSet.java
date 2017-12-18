@@ -38,6 +38,8 @@ public class GetSet extends AbstractConnector {
                 String response = jedis.getSet(key, value);
                 if (response != null) {
                     messageContext.setProperty(RedisConstants.RESULT, response);
+                } else {
+                    handleException("Redis server throw null response", messageContext);
                 }
                 jedis.disconnect();
             }

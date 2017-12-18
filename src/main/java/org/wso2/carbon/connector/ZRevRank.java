@@ -38,6 +38,8 @@ public class ZRevRank extends AbstractConnector {
                 Long response = jedis.zrevrank(key, member);
                 if (response != null) {
                     messageContext.setProperty(RedisConstants.RESULT, response);
+                } else {
+                    handleException("Redis server throw null response", messageContext);
                 }
                 jedis.disconnect();
             }

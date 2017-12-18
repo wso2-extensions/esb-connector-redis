@@ -42,6 +42,8 @@ public class SUnionStore extends AbstractConnector {
                 Long response = jedis.sunionstore(dstKey, keyValue);
                 if (response != null) {
                     messageContext.setProperty(RedisConstants.RESULT, response);
+                } else {
+                    handleException("Redis server throw null response", messageContext);
                 }
                 jedis.disconnect();
             }

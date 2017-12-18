@@ -38,6 +38,8 @@ public class LPushX extends AbstractConnector {
                 Long response = jedis.lpush(key, string);
                 if (response != null) {
                     messageContext.setProperty(RedisConstants.RESULT, response);
+                } else {
+                    handleException("Redis server throw null response", messageContext);
                 }
                 jedis.disconnect();
             }

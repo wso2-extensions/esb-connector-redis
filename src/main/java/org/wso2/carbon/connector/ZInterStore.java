@@ -43,6 +43,8 @@ public class ZInterStore extends AbstractConnector {
                 Long response = jedis.zinterstore(dstKey, keyValue);
                 if (response != null) {
                     messageContext.setProperty(RedisConstants.RESULT, response);
+                } else {
+                    handleException("Redis server throw null response", messageContext);
                 }
                 jedis.disconnect();
             }

@@ -38,6 +38,8 @@ public class HExists extends AbstractConnector {
                 Boolean response = jedis.hexists(key, field);
                 if (response != null) {
                     messageContext.setProperty(RedisConstants.RESULT, response);
+                } else {
+                    handleException("Redis server throw null response", messageContext);
                 }
                 jedis.disconnect();
             }

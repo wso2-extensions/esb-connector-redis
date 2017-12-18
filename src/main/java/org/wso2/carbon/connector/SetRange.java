@@ -39,6 +39,8 @@ public class SetRange extends AbstractConnector {
                 Long response = jedis.setrange(key, offset, value);
                 if (response != null) {
                     messageContext.setProperty(RedisConstants.RESULT, response);
+                } else {
+                    handleException("Redis server throw null response", messageContext);
                 }
                 jedis.disconnect();
             }

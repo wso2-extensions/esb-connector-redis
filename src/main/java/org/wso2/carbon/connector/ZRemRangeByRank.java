@@ -39,6 +39,8 @@ public class ZRemRangeByRank extends AbstractConnector {
                 Long response = jedis.zremrangeByRank(key, start, end);
                 if (response != null) {
                     messageContext.setProperty(RedisConstants.RESULT, response);
+                } else {
+                    handleException("Redis server throw null response", messageContext);
                 }
                 jedis.disconnect();
             }

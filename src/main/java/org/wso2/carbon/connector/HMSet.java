@@ -46,6 +46,8 @@ public class HMSet extends AbstractConnector {
                 String response = jedis.hmset(key, inputMap);
                 if (response != null) {
                     messageContext.setProperty(RedisConstants.RESULT, response);
+                } else {
+                    handleException("Redis server throw null response", messageContext);
                 }
                 jedis.disconnect();
             }

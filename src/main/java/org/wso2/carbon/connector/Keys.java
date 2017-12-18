@@ -40,6 +40,8 @@ public class Keys extends AbstractConnector {
                 Set<String> response = jedis.keys(pattern);
                 if (response != null) {
                     messageContext.setProperty(RedisConstants.RESULT, response.toString());
+                } else {
+                    handleException("Redis server throw null response", messageContext);
                 }
                 jedis.disconnect();
             }

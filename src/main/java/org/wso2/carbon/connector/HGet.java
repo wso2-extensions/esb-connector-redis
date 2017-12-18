@@ -38,6 +38,8 @@ public class HGet extends AbstractConnector {
                 String response = jedis.hget(key, field);
                 if (response != null) {
                     messageContext.setProperty(RedisConstants.RESULT, response);
+                } else {
+                    handleException("Redis server throw null response", messageContext);
                 }
                 jedis.disconnect();
             }

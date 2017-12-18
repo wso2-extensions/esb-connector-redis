@@ -37,6 +37,8 @@ public class Echo extends AbstractConnector {
                 String response = jedis.echo(key);
                 if (response != null) {
                     messageContext.setProperty(RedisConstants.RESULT, response);
+                } else {
+                    handleException("Redis server throw null response", messageContext);
                 }
                 jedis.disconnect();
             }

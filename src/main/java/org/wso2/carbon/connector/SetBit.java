@@ -39,6 +39,8 @@ public class SetBit extends AbstractConnector {
                 Boolean response = jedis.setbit(key, offset, value);
                 if (response != null) {
                     messageContext.setProperty(RedisConstants.RESULT, response);
+                } else {
+                    handleException("Redis server throw null response", messageContext);
                 }
                 jedis.disconnect();
             }

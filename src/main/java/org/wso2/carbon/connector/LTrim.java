@@ -39,6 +39,8 @@ public class LTrim extends AbstractConnector {
                 String response = jedis.ltrim(key, start, end);
                 if (response != null) {
                     messageContext.setProperty(RedisConstants.RESULT, response);
+                } else {
+                    handleException("Redis server throw null response", messageContext);
                 }
                 jedis.disconnect();
             }

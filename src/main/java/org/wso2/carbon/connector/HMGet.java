@@ -42,6 +42,8 @@ public class HMGet extends AbstractConnector {
                 List<String> response = jedis.hmget(key, keyValue);
                 if (response != null) {
                     messageContext.setProperty(RedisConstants.RESULT, response.toString());
+                } else {
+                    handleException("Redis server throw null response", messageContext);
                 }
                 jedis.disconnect();
             }

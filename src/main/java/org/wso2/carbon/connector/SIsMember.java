@@ -38,6 +38,8 @@ public class SIsMember extends AbstractConnector {
                 Boolean response = jedis.sismember(key, member);
                 if (response != null) {
                     messageContext.setProperty(RedisConstants.RESULT, response);
+                } else {
+                    handleException("Redis server throw null response", messageContext);
                 }
                 jedis.disconnect();
             }

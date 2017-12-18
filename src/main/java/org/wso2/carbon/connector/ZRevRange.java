@@ -41,6 +41,8 @@ public class ZRevRange extends AbstractConnector {
                 Set<String> response = jedis.zrevrange(key, start, end);
                 if (response != null) {
                     messageContext.setProperty(RedisConstants.RESULT, response.toString());
+                } else {
+                    handleException("Redis server throw null response", messageContext);
                 }
                 jedis.disconnect();
             }

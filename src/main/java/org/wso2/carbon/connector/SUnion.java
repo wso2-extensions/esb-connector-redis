@@ -42,6 +42,8 @@ public class SUnion extends AbstractConnector {
                 Set<String> response = jedis.sunion(keyValue);
                 if (response != null) {
                     messageContext.setProperty(RedisConstants.RESULT, response.toString());
+                } else {
+                    handleException("Redis server throw null response", messageContext);
                 }
                 jedis.disconnect();
             }

@@ -38,6 +38,8 @@ public class RenamenX extends AbstractConnector {
                 Long response = jedis.renamenx(oldKey, newKey);
                 if (response != null) {
                     messageContext.setProperty(RedisConstants.RESULT, response);
+                } else {
+                    handleException("Redis server throw null response", messageContext);
                 }
                 jedis.disconnect();
             }

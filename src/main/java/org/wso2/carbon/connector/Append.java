@@ -38,6 +38,8 @@ public class Append extends AbstractConnector {
                 Long response = jedis.append(key, value);
                 if (response != null) {
                     messageContext.setProperty(RedisConstants.RESULT, response);
+                } else {
+                    handleException("Redis server throw null response", messageContext);
                 }
                 jedis.disconnect();
             }

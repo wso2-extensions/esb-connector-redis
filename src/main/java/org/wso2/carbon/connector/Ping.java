@@ -36,6 +36,8 @@ public class Ping extends AbstractConnector {
                 String response = jedis.ping();
                 if (response != null) {
                     messageContext.setProperty(RedisConstants.RESULT, response);
+                } else {
+                    handleException("Redis server throw null response", messageContext);
                 }
                 jedis.disconnect();
             }

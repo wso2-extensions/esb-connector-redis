@@ -39,6 +39,8 @@ public class ZCount extends AbstractConnector {
                 Long response = jedis.zcount(key, min, max);
                 if (response != null) {
                     messageContext.setProperty(RedisConstants.RESULT, response);
+                } else {
+                    handleException("Redis server throw null response", messageContext);
                 }
                 jedis.disconnect();
             }

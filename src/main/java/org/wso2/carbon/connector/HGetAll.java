@@ -39,6 +39,8 @@ public class HGetAll extends AbstractConnector {
                 Map<String, String> response = jedis.hgetAll(key);
                 if (response != null) {
                     messageContext.setProperty(RedisConstants.RESULT, response.toString());
+                } else {
+                    handleException("Redis server throw null response", messageContext);
                 }
                 jedis.disconnect();
             }

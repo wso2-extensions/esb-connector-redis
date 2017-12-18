@@ -41,6 +41,8 @@ public class ZRangeByScore extends AbstractConnector {
                 Set<String> response = jedis.zrangeByScore(key, min, max);
                 if (response != null) {
                     messageContext.setProperty(RedisConstants.RESULT, response.toString());
+                } else {
+                    handleException("Redis server throw null response", messageContext);
                 }
                 jedis.disconnect();
             }

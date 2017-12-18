@@ -37,6 +37,8 @@ public class Exists extends AbstractConnector {
                 Boolean response = jedis.exists(key);
                 if (response != null) {
                     messageContext.setProperty(RedisConstants.RESULT, response);
+                } else {
+                    handleException("Redis server throw null response", messageContext);
                 }
                 jedis.disconnect();
             }

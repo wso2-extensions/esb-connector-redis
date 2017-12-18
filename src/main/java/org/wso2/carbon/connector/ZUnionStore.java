@@ -42,6 +42,8 @@ public class ZUnionStore extends AbstractConnector {
                 Long response = jedis.zunionstore(dstKey, keyValue);
                 if (response != null) {
                     messageContext.setProperty(RedisConstants.RESULT, response);
+                } else {
+                    handleException("Redis server throw null response", messageContext);
                 }
                 jedis.disconnect();
             }

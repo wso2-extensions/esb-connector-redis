@@ -41,6 +41,8 @@ public class Del extends AbstractConnector {
                 Long response = jedis.del(keyValue);
                 if (response != null) {
                     messageContext.setProperty(RedisConstants.RESULT, response);
+                } else {
+                    handleException("Redis server throw null response", messageContext);
                 }
                 jedis.disconnect();
             }

@@ -38,6 +38,8 @@ public class IncrBy extends AbstractConnector {
                 Long response = jedis.incrBy(key, integer);
                 if (response != null) {
                     messageContext.setProperty(RedisConstants.RESULT, response);
+                } else {
+                    handleException("Redis server throw null response", messageContext);
                 }
                 jedis.disconnect();
             }

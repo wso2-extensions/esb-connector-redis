@@ -39,6 +39,8 @@ public class SMove extends AbstractConnector {
                 Long response = jedis.smove(srcKey, dstKey, member);
                 if (response != null) {
                     messageContext.setProperty(RedisConstants.RESULT, response);
+                } else {
+                    handleException("Redis server throw null response", messageContext);
                 }
                 jedis.disconnect();
             }

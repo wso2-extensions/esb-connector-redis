@@ -39,6 +39,8 @@ public class HIncrBy extends AbstractConnector {
                 Long response = jedis.hincrBy(key, field, value);
                 if (response != null) {
                     messageContext.setProperty(RedisConstants.RESULT, response);
+                } else {
+                    handleException("Redis server throw null response", messageContext);
                 }
                 jedis.disconnect();
             }

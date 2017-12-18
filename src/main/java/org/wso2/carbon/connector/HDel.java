@@ -42,6 +42,8 @@ public class HDel extends AbstractConnector {
                 Long response = jedis.hdel(key, keyValue);
                 if (response != null) {
                     messageContext.setProperty(RedisConstants.RESULT, response);
+                } else {
+                    handleException("Redis server throw null response", messageContext);
                 }
                 jedis.disconnect();
             }

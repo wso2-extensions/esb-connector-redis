@@ -42,6 +42,8 @@ public class MGet extends AbstractConnector {
                 List<String> response = jedis.mget(keyValue);
                 if (response != null) {
                     messageContext.setProperty(RedisConstants.RESULT, response.toString());
+                } else {
+                    handleException("Redis server throw null response", messageContext);
                 }
                 jedis.disconnect();
             }

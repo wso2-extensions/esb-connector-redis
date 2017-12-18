@@ -39,6 +39,8 @@ public class ZIncrBy extends AbstractConnector {
                 Double response = jedis.zincrby(key, score, member);
                 if (response != null) {
                     messageContext.setProperty(RedisConstants.RESULT, response);
+                } else {
+                    handleException("Redis server throw null response", messageContext);
                 }
                 jedis.disconnect();
             }

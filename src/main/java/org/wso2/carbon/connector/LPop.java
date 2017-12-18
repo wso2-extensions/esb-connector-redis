@@ -37,6 +37,8 @@ public class LPop extends AbstractConnector {
                 String response = jedis.lpop(key);
                 if (response != null) {
                     messageContext.setProperty(RedisConstants.RESULT, response);
+                } else {
+                    handleException("Redis server throw null response", messageContext);
                 }
                 jedis.disconnect();
             }

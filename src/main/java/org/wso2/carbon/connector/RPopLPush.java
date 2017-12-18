@@ -38,6 +38,8 @@ public class RPopLPush extends AbstractConnector {
                 String response = jedis.rpoplpush(srcKey, dstKey);
                 if (response != null) {
                     messageContext.setProperty(RedisConstants.RESULT, response);
+                } else {
+                    handleException("Redis server throw null response", messageContext);
                 }
                 jedis.disconnect();
             }

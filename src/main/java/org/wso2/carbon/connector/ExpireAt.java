@@ -38,6 +38,8 @@ public class ExpireAt extends AbstractConnector {
                 Long response = jedis.expireAt(key, unixTime);
                 if (response != null) {
                     messageContext.setProperty(RedisConstants.RESULT, response);
+                } else {
+                    handleException("Redis server throw null response", messageContext);
                 }
                 jedis.disconnect();
             }

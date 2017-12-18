@@ -38,6 +38,8 @@ public class ZScore extends AbstractConnector {
                 Double response = jedis.zscore(key, member);
                 if (response != null) {
                     messageContext.setProperty(RedisConstants.RESULT, response);
+                } else {
+                    handleException("Redis server throw null response", messageContext);
                 }
                 jedis.disconnect();
             }

@@ -39,6 +39,8 @@ public class HVals extends AbstractConnector {
                 List<String> response = jedis.hvals(key);
                 if (response != null) {
                     messageContext.setProperty(RedisConstants.RESULT, response.toString());
+                } else {
+                    handleException("Redis server throw null response", messageContext);
                 }
                 jedis.disconnect();
             }
