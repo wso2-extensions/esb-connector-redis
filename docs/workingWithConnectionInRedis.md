@@ -1,4 +1,4 @@
-# Working with Connection in Redis
+# Working with Connection Commands in Redis
 
 [[  Overview ]](#overview)  [[ Operation details ]](#operation-details)  [[  Sample configuration  ]](#sample-configuration)
 
