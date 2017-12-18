@@ -1,22 +1,22 @@
-# Working with Server in Redis
+# Working with Server Commands in Redis
 
 [[  Overview ]](#overview)  [[ Operation details ]](#operation-details)  [[  Sample configuration  ]](#sample-configuration)
 
 ### Overview 
-The following operations allow you to work with "server". Click an operation name to see details on how to use it.
+The following operations allow you to work with server. Click an operation name to see details on how to use it.
 
-For a sample proxy service that illustrates how to work with "server", see [  sample configuration  ](#sample-configuration).
+For a sample proxy service that illustrates how to work with server commands, see [sample configuration](#sample-configuration).
 
 | Operation        | Description |
 | ------------- |:-------------|
-| [flushAll](#flushAll)    | Delete all the keys of all the existing databases |
-| [flushDB](#flushDB)    | Delete all the keys of the currently selected database |
+| [flushAll](#deleting-all-keys-from-all-databases)    | Deletes all the keys from all existing databases |
+| [flushDB](#deleting-all-keys-from-the-current-database)    | Deletes all the keys from the currently selected database |
 
 ### Operation details
-This section provides details on the operations.
+This section provides more details on the operations.
 
-#### FlushAll
-The flushAll operation is used to delete all the keys of all the existing databases.
+#### Deleting all keys from all databases
+The flushAll operation deletes all the keys from all existing databases.
 
 **flushAll**
 ```xml
@@ -25,14 +25,14 @@ The flushAll operation is used to delete all the keys of all the existing databa
 
 **Sample request**
 
-Sample request with empty body can be handled by the flushAll operation.
+A sample request with an empty body can be handled by the flushAll operation.
 
 **Related redis documentation**
 
 [https://redis.io/commands/flushall](https://redis.io/commands/flushall)
 
-#### FlushDB
-The flushDB operation is used to delete all the keys of the currently selected database.
+#### Deleting all keys from the current database
+The flushDB operation deletes all the keys from the currently selected database.
 
 **flushDB**
 ```xml
@@ -41,14 +41,14 @@ The flushDB operation is used to delete all the keys of the currently selected d
 
 **Sample request**
 
-Sample request with empty body can be handled by the flushDB operation.
+A sample request with an empty body can be handled by the flushDB operation.
 
 **Related redis documentation**
 
 [https://redis.io/commands/flushdb](https://redis.io/commands/flushdb)
 
 ### Sample configuration
-Following is a sample proxy service that illustrates how to connect to Redis with the init operation and use the flushAll operation. The sample request for this proxy can be found in [flushAll sample request](#request). You can use this sample as a template for using other operations in this category.
+Following is a sample proxy service that illustrates how to connect to Redis with the init operation, and then use the flushAll operation. The sample request for this proxy can be found in [flushAll sample request](#request). You can use this sample as a template for using other operations in this category.
 
 **Sample Proxy**
 ```xml
