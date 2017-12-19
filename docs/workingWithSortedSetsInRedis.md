@@ -3,20 +3,20 @@
 [[  Overview ]](#overview)  [[ Operation details ]](#operation-details)  [[  Sample configuration  ]](#sample-configuration)
 
 ### Overview 
-The following operations allow you to work with "sorted sets". Click an operation name to see details on how to use it.
+The following operations allow you to work with sorted sets. Click an operation name to see details on how to use it.
 
-For a sample proxy service that illustrates how to work with "sorted sets", see [  sample configuration  ](#sample-configuration).
+For a sample proxy service that illustrates how to work with sorted sets, see [sample configuration](#sample-configuration).
 
 | Operation        | Description |
 | ------------- |:-------------|
-| [zadd](#zadd)    | Add one or more members to a sorted set or update its score if it already exist |
-| [zCount](#zCount)    | Count the members in a sorted set with scores within the given values |
+| [zadd](#adding-one-or-more-members-to-a-sorted-set)    | Adds one or more specified members to a sorted set, or updates the score if a specified member already exists |
+| [zCount](#retrieving-a-count-of-members-in-a-sorted-set)    | Retrieves a count of members in a sorted set, with scores within the specified values |
 
 ### Operation details
-This section provides details on the operations.
+This section provides more details on the operations.
 
-#### Zadd
-The zadd operation is used to add one or more members to a sorted set or update its score if it already exist.
+#### Adding one or more members to a sorted set
+The zadd operation adds one or more members to a sorted set, or update its score if a specified member already exists.
 
 **zadd**
 ```xml
@@ -28,9 +28,9 @@ The zadd operation is used to add one or more members to a sorted set or update 
 ```
 
 **Properties**
-* redisKey: The name of the key.
-* redisScore: The score value.
-* redisMember: The name of the member.
+* redisKey: The name of the key where the sorted set is stored.
+* redisScore: The score of the sorted set.
+* redisMember: The name of the member you want to add.
 
 **Sample request**
 
@@ -48,8 +48,8 @@ Following is a sample REST/JSON request that can be handled by the zadd operatio
 
 [https://redis.io/commands/zadd](https://redis.io/commands/zadd)
 
-#### ZCount
-The zCount operation is used to count the members in a sorted set with scores within the given values.
+#### Retrieving a count of members in a sorted set
+The zCount operation retrieves a count of members in a sorted set, with scores that are within the min and max values specified.
 
 **zCount**
 ```xml
@@ -61,9 +61,9 @@ The zCount operation is used to count the members in a sorted set with scores wi
 ```
 
 **Properties**
-* redisKey: The name of the key.
-* redisMin: The minimum value.
-* redisMax: The maximum value.
+* redisKey: The name of the key where the sorted set is stored.
+* redisMin: The minimum score value.
+* redisMax: The maximum score value.
 
 **Sample request**
 
@@ -82,7 +82,7 @@ Following is a sample REST/JSON request that can be handled by the zCount operat
 [https://redis.io/commands/zcount](https://redis.io/commands/zcount)
 
 ### Sample configuration
-Following is a sample proxy service that illustrates how to connect to Redis with the init operation and use the zadd operation. The sample request for this proxy can be found in [zadd sample request](#request). You can use this sample as a template for using other operations in this category.
+Following is a sample proxy service that illustrates how to connect to Redis with the init operation, and then use the zadd operation. The sample request for this proxy can be found in [zadd sample request](#request). You can use this sample as a template for using other operations in this category.
 
 **Sample Proxy**
 ```xml
