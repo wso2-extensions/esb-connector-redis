@@ -3,30 +3,30 @@
 [[  Overview ]](#overview)  [[ Operation details ]](#operation-details)  [[  Sample configuration  ]](#sample-configuration)
 
 ### Overview 
-The following operations allow you to work with "hashes". Click an operation name to see details on how to use it.
+The following operations allow you to work with hashes. Click an operation name to see details on how to use it.
 
-For a sample proxy service that illustrates how to work with "connection", see [  sample configuration  ](#sample-configuration).
+For a sample proxy service that illustrates how to work with hashes, see [sample configuration](#sample-configuration).
 
 | Operation        | Description |
 | ------------- |:-------------|
-| [hDel](#hDel)    | Delete one or more hash fields |
-| [hExists](#hExists)    | Determine if a hash field exists |
-| [hGet](#hGet)    | Get the value of a hash field |
-| [hGetAll](#hGetAll)    | Get all the fields and values in a hash |
-| [hIncrBy](#hIncrBy)    | Increment the integer value of a hash field by the given number |
-| [hKeys](#hKeys)    | Get all the fields in a hash |
-| [hLen](#hLen)    | Get the number of fields in a hash |
-| [hMGet](#hMGet)    | Get the values of all the given hash fields |
-| [hMSet](#hMSet)    | Set multiple hash fields to multiple values |
-| [hSet](#hSet)    | Set the string value of a hash field |
-| [hSetnX](#hSetnX)    | Set the value of a hash field, only if the field does not exist |
-| [hVals](#hVals)    | Get all the values in a hash |
+| [hDel](#deleting-hash-fields)    | Deletes one or more hash fields |
+| [hExists](#determining-the-existence-of-a-hash-field)    | Determines the existence of a hash field |
+| [hGet](#retrieving-the-value-of-a-hash-field)    | Retrieves the value of a hash field |
+| [hGetAll](#retrieving-all-hash-fields-and-values)    | Retrieves all the fields and values in a hash |
+| [hIncrBy](#incrementing-the-integer-value-of-a-hash-field)    | Increments the integer value of a hash field by the specified amount |
+| [hKeys](#retrieving-all-the-fields-in-a-hash)    | Retrieves all the fields in a hash |
+| [hLen](#retrieving-the-number-of-fields-in-a-hash)    | Retrieves the number of fields in a hash |
+| [hMGet](#retrieving-values-of-all-specified-hash-fields)    | Retrieves values of all specified hash fields |
+| [hMSet](#setting-specified-fields-to-their-respective-values)    | Sets specified fieldsto their respective values |
+| [hSet](#setting-a-specific-field-in-a-hash-to-a-value)    | Sets a specific field in a hash to a specified value |
+| [hSetnX](#setting-a-field-to-a-value-only-if-the-field-does-not-exist-in-the-hash)    | Sets a field to a value, only if the field does not alreay exist in the hash |
+| [hVals](#retrieving-all-values-in-a-hash)    | Retrieves all values in a hash |
 
 ### Operation details
-This section provides details on the operations.
+This section provides more details on the operations.
 
-#### HDel
-The hDel operation is used to delete one or more hash fields.
+#### Deleting hash fields
+The hDel operation deletes one or more specified hash fields.
 
 **hDel**
 ```xml
@@ -37,8 +37,8 @@ The hDel operation is used to delete one or more hash fields.
 ```
 
 **Properties**
-* redisKey: The name of the key.
-* redisFields: The values of the fields, which want to delete.
+* redisKey: The name of the key where the hash is stored.
+* redisFields: The fields that you want to delete.
 
 **Sample request**
 
@@ -55,8 +55,8 @@ Following is a sample REST/JSON request that can be handled by the hDel operatio
 
 [https://redis.io/commands/hdel](https://redis.io/commands/hdel)
 
-#### HExists
-The hExists operation is used to determine if a hash field exists.
+#### Determining the existence of a hash field
+The hExists operation determines whether a specified hash field exists.
 
 **hExists**
 ```xml
@@ -67,8 +67,8 @@ The hExists operation is used to determine if a hash field exists.
 ```
 
 **Properties**
-* redisKey: The name of the key.
-* redisField: The value of field.
+* redisKey: The name of the key where the hash is stored.
+* redisField: The field to determine existence.
 
 **Sample request**
 
@@ -85,8 +85,8 @@ Following is a sample REST/JSON request that can be handled by the hExists opera
 
 [https://redis.io/commands/hexists](https://redis.io/commands/hexists)
 
-#### HGet
-The hGet operation is used to get the value of a hash field.
+#### Retrieving the value of a hash field
+The hGet operation retrieves the value of a particular field in a hash stored in a specified key.
 
 **hGet**
 ```xml
@@ -97,8 +97,8 @@ The hGet operation is used to get the value of a hash field.
 ```
 
 **Properties**
-* redisKey: The name of the key.
-* redisField: The value of field.
+* redisKey: The name of the key where the hash is stored.
+* redisField: The field for which you want to retrieve the value.
 
 **Sample request**
 
@@ -115,8 +115,8 @@ Following is a sample REST/JSON request that can be handled by the hGet operatio
 
 [https://redis.io/commands/hget](https://redis.io/commands/hget)
 
-#### HGetAll
-The hGetAll operation is used to get all the fields and values in a hash.
+#### Retrieving all hash fields and values 
+The hGetAll operation retrieves all the fields and values of a hash stored in a specified key.
 
 **hGetAll**
 ```xml
@@ -126,7 +126,7 @@ The hGetAll operation is used to get all the fields and values in a hash.
 ```
 
 **Properties**
-* redisKey: The name of the key.
+* redisKey: The name of the key where the hash is stored.
 
 **Sample request**
 
@@ -142,8 +142,8 @@ Following is a sample REST/JSON request that can be handled by the hGetAll opera
 
 [https://redis.io/commands/hgetall](https://redis.io/commands/hgetall)
 
-#### HIncrBy
-The hIncrBy operation is used to increment the integer value of a hash field by the given number.
+#### Incrementing the integer value of a hash field
+The hIncrBy operation increments the integer value of a hash field by the specified amount.
 
 **hIncrBy**
 ```xml
@@ -155,9 +155,9 @@ The hIncrBy operation is used to increment the integer value of a hash field by 
 ```
 
 **Properties**
-* redisKey: The name of the key.
-* redisField: The value of field.
-* redisValue: The increment value.
+* redisKey: The name of the key where the hash is stored.
+* redisField: The hash field for which you want to increment the value.
+* redisValue: The amount by which you want to increment the hash field value.
 
 **Sample request**
 
@@ -175,8 +175,8 @@ Following is a sample REST/JSON request that can be handled by the hIncrBy opera
 
 [https://redis.io/commands/hincrby](https://redis.io/commands/hincrby)
 
-#### HKeys
-The hKeys operation is used to get all the fields in a hash.
+#### Retrieving all the fields in a hash
+The hKeys operation retrieves all the fields in a hash.
 
 **hKeys**
 ```xml
@@ -186,7 +186,7 @@ The hKeys operation is used to get all the fields in a hash.
 ```
 
 **Properties**
-* redisKey: The name of the key.
+* redisKey: The name of the key where the hash is stored.
 
 **Sample request**
 
@@ -202,8 +202,8 @@ Following is a sample REST/JSON request that can be handled by the hKeys operati
 
 [https://redis.io/commands/hkeys](https://redis.io/commands/hkeys)
 
-#### HLen
-The hLen operation is used to get the number of fields in a hash.
+#### Retrieving the number of fields in a hash
+The hLen operation retrieves the number of fields in a hash.
 
 **hLen**
 ```xml
@@ -213,7 +213,7 @@ The hLen operation is used to get the number of fields in a hash.
 ```
 
 **Properties**
-* redisKey: The name of the key.
+* redisKey: The name of the key where the hash is stored.
 
 **Sample request**
 
@@ -229,8 +229,8 @@ Following is a sample REST/JSON request that can be handled by the hLen operatio
 
 [https://redis.io/commands/hlen](https://redis.io/commands/hlen)
 
-#### HMGet
-The hMGet operation is used to get the values of all the given hash fields.
+#### Retrieving values of all specified hash fields
+The hMGet operation retrieves values associated with each of the specified fields in a hash that is stored in a particular key.
 
 **hMGet**
 ```xml
@@ -241,8 +241,8 @@ The hMGet operation is used to get the values of all the given hash fields.
 ```
 
 **Properties**
-* redisKey: The name of the key.
-* redisFields: The values of the fields.
+* redisKey: The name of the key where the hash is stored.
+* redisFields: The fields for which you want to retrieve values.
 
 **Sample request**
 
@@ -259,8 +259,8 @@ Following is a sample REST/JSON request that can be handled by the hMGet operati
 
 [https://redis.io/commands/hmget](https://redis.io/commands/hmget)
 
-#### HMSet
-The hMSet operation is used to set multiple hash fields to multiple values.
+#### Setting specified fields to their respective values 
+The hMSet operation sets specified fields to their respective values in the hash stored in a particular key.
 
 **hMSet**
 ```xml
@@ -271,8 +271,8 @@ The hMSet operation is used to set multiple hash fields to multiple values.
 ```
 
 **Properties**
-* redisKey: The name of the key.
-* redisFieldsValues: the values of fields, which want to add to the key.
+* redisKey: The name of the key where the hash is stored.
+* redisFieldsValues: the fields you want to set and their respective values.
 
 **Sample request**
 
@@ -289,8 +289,8 @@ Following is a sample REST/JSON request that can be handled by the hMSet operati
 
 [https://redis.io/commands/hmset](https://redis.io/commands/hmset)
 
-#### HSet
-The hSet operation is used to set the string value of a hash field.
+#### Setting a specific field in a hash to a value
+The hSet operation sets a specific field in a hash to a specified value.
 
 **hSet**
 ```xml
@@ -302,9 +302,9 @@ The hSet operation is used to set the string value of a hash field.
 ```
 
 **Properties**
-* redisKey: The name of the key.
-* redisField: The value of field.
-* redisValue: The value which set to the field.
+* redisKey: The name of the key where the hash is stored.
+* redisField: The field for which you want to set a value.
+* redisValue: The value that you want to set for the field.
 
 **Sample request**
 
@@ -322,8 +322,8 @@ Following is a sample REST/JSON request that can be handled by the hSet operatio
 
 [https://redis.io/commands/hset](https://redis.io/commands/hset)
 
-#### HSetnX
-The hSetnX operation is used to set the value of a hash field, only if the field does not exist.
+#### Setting a field to a value, only if the field does not exist in the hash
+The hSetnX operation sets a specified field to a value, only if the field does not already exist in the hash. If field already exists, this operation has no effect.
 
 **hSetnX**
 ```xml
@@ -335,9 +335,9 @@ The hSetnX operation is used to set the value of a hash field, only if the field
 ```
 
 **Properties**
-* redisKey: The name of the key.
-* redisField: The value of field.
-* redisValue: The value which set to the field.
+* redisKey: The name of the key where the hash is stored.
+* redisField: The new field in the hash for which you want to set a value.
+* redisValue: The value that you want to set for the new field.
 
 **Sample request**
 
@@ -355,8 +355,8 @@ Following is a sample REST/JSON request that can be handled by the hSetnX operat
 
 [https://redis.io/commands/hsetnx](https://redis.io/commands/hsetnx)
 
-#### HVals
-The hVals operation is used to get all the values in a hash.
+#### Retrieving all values in a hash
+The hVals operation retrieves all values in a hash that is stored in a particular key.
 
 **hVals**
 ```xml
@@ -366,7 +366,7 @@ The hVals operation is used to get all the values in a hash.
 ```
 
 **Properties**
-* redisKey: The name of the key.
+* redisKey: The name of the key where the hash is stored.
 
 **Sample request**
 
@@ -383,7 +383,7 @@ Following is a sample REST/JSON request that can be handled by the hVals operati
 [https://redis.io/commands/hvals](https://redis.io/commands/hvals)
 
 ### Sample configuration
-Following is a sample proxy service that illustrates how to connect to Redis with the init operation and use the hDel operation. The sample request for this proxy can be found in [hDel sample request](#request). You can use this sample as a template for using other operations in this category.
+Following is a sample proxy service that illustrates how to connect to Redis with the init operation, and then use the hDel operation. The sample request for this proxy can be found in [hDel sample request](#request). You can use this sample as a template for using other operations in this category.
 
 **Sample Proxy**
 ```xml
