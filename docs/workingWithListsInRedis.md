@@ -3,32 +3,32 @@
 [[  Overview ]](#overview)  [[ Operation details ]](#operation-details)  [[  Sample configuration  ]](#sample-configuration)
 
 ### Overview 
-The following operations allow you to work with "lists". Click an operation name to see details on how to use it.
+The following operations allow you to work with lists. Click an operation name to see details on how to use it.
 
-For a sample proxy service that illustrates how to work with "lists", see [  sample configuration  ](#sample-configuration).
+For a sample proxy service that illustrates how to work with lists, see [sample configuration](#sample-configuration).
 
 | Operation        | Description |
 | ------------- |:-------------|
-| [blPop](#blPop)    | Remove and get the first element in a list or block until one is available |
-| [brPop](#brPop)    | Remove an get the element in a list or block one is available |
-| [lInsert](#lInsert)    | Insert an element before or after another element in a list |
-| [lLen](#lLen)    | Get a length of a list |
-| [lPop](#lPop)    | Remove and get the first element in a list |
-| [lPush](#lPush)    | Prepend one or multiple values to a list |
-| [lPushX](#lPushX)    | Prepend a value of an element in a list by its index |
-| [lRange](#lRange)    | Get a range of elements from a list |
-| [lRem](#lRem)    | Remove element from a list |
-| [lSet](#lSet)    | Set the value of an element in a list by it's index |
-| [lTrim](#lTrim)    | Trim a list to the specified range |
-| [rPopLPush](#rPopLPush)    | Remove the list element in a list, prepend it to another list and return it |
-| [rPush](#rPush)    | Append one or more multiple values to a list |
-| [rPushX](#rPushX)    | Append a value to a list, only if the list exists |
+| [blPop](#retrieving-the-first-element-in-a-list-or-blocking-until-an-element-is-available)    | Retrieves the first element, if available, or blocks the connection for a specific time until an element is available |
+| [brPop](#retrieving-the-last-element-in-a-list-or-blocking-until-an-element-is-available)    | Retrieves the last element, if available, or blocks the connection for a specific time until an element is available |
+| [lInsert](#inserting-an-element-to-a-list)    | Inserts an element before or after an existing element in a list |
+| [lLen](#retrieving-the-length-of-a-list)    | Retrieves the length of a list |
+| [lPop](#retrieving-the-first-element-in-a-list)    | Retrieves the first element in a list |
+| [lPush](#inserting-one-or-more-elements-to-the-head-of-a-list)    | Inserts one or more elements to the head of a list |
+| [lPushX](#inserting-one-or-more-elements-to-the-head-of-a-list-only-if-the-list-exists)    | Inserts one or more elements to the head of a list, only if the list already exists  |
+| [lRange](#retrieving-a-range-of-elements-from-a-list)    | Retrieves a range of elements from a list |
+| [lRem](#removing-elements-from-a-list)    | Removes elements from a list |
+| [lSet](#setting-the-value-of-an-element-in-a-list-by-its-index)    | Sets the value of an element in a list by its index |
+| [lTrim](#trimming-a-list-to-a-specified-range)    | Trims a list to a specified range |
+| [rPopLPush](#retrieving-the-last-element-in-a-list)    | Retrieves the last element in a list |
+| [rPush](#inserting-one-or-more-elements-to-the-tail-of-a-list)    | Inserts one or more elements to the tail of a list |
+| [rPushX](#inserting-one-or-more-elements-to-the-tail-of-a-list-only-if-the-list-exists)    | Inserts one or more elements to the tail of a list, only if the list already exists |
 
 ### Operation details
-This section provides details on the operations.
+This section provides more details on the operations.
 
-#### BlPop
-The blPop operation is used to remove and get the first element in a list or block until one is available.
+#### Retrieving the first element in a list, or blocking until an element is available
+The blPop operation retrieves the first element in a list, if available, or blocks the connection for a specified amount of time until an element is available.
 
 **blPop**
 ```xml
@@ -39,8 +39,8 @@ The blPop operation is used to remove and get the first element in a list or blo
 ```
 
 **Properties**
-* redisKey: The name of the key.
-* redisBlPopTimeout: The time to be added for blocking list pop from the head.
+* redisKey: The name of the key where the list is stored.
+* redisBlPopTimeout: The amount of time to keep the connection blocked, waiting for an element to be available in the head of the list.
 
 **Sample request**
 
@@ -57,8 +57,8 @@ Following is a sample REST/JSON request that can be handled by the blPop operati
 
 [https://redis.io/commands/blpop](https://redis.io/commands/blpop)
 
-#### BrPop
-The brPop operation is used to remove an get the element in a list or block one is available.
+#### Retrieving the last element in a list, or blocking until an element is available
+The brPop operation retrieves the last element in a list, if available, or blocks the connection for a specified amount of time until an element is available.
 
 **brPop**
 ```xml
@@ -69,8 +69,9 @@ The brPop operation is used to remove an get the element in a list or block one 
 ```
 
 **Properties**
-* redisKey: The name of the key.
-* redisBrPopTimeout: The time to be added for blocking list pop from the tail.
+* redisKey: The name of the key where the list is stored.
+* redisBlPopTimeout: The amount of time to keep the connection blocked, waiting for an element to be available in the tail of the list.
+
 
 **Sample request**
 
@@ -87,8 +88,8 @@ Following is a sample REST/JSON request that can be handled by the brPop operati
 
 [https://redis.io/commands/brpop](https://redis.io/commands/brpop)
 
-#### LInsert
-The lInsert operation is used to insert an element before or after another element in a list.
+#### Inserting an element to a list
+The lInsert operation inserts a specified element before or after an existing element in a list that is stored in a specified key.
 
 **lInsert**
 ```xml
@@ -101,10 +102,10 @@ The lInsert operation is used to insert an element before or after another eleme
 ```
 
 **Properties**
-* redisKey: The name of the key.
-* redisWhere: The place, value should be added.
-* redisPivot: The value, use as a pivot element.
-* redisValue: The value to be added to the key.
+* redisKey: The name of the key where the list is stored.
+* redisWhere: The place where you want to add an element. Possible values are BEFORE or AFTER. For example, whether you want to add an element before a particular element that exists in the list.
+* redisPivot: An existing element in the list that is used as the pivot element.
+* redisValue: The element that you want to insert to the list.
 
 **Sample request**
 
@@ -123,8 +124,8 @@ Following is a sample REST/JSON request that can be handled by the lInsert opera
 
 [https://redis.io/commands/linsert](https://redis.io/commands/linsert)
 
-#### LLen
-The lLen operation is used to get a length of a list.
+#### Retrieving the length of a list
+The lLen operation retrieves the length of a list that is stored in a specified key.
 
 **lLen**
 ```xml
@@ -134,7 +135,7 @@ The lLen operation is used to get a length of a list.
 ```
 
 **Properties**
-* redisKey: The name of the key.
+* redisKey: The name of the key where the list is stored.
 
 **Sample request**
 
@@ -150,8 +151,8 @@ Following is a sample REST/JSON request that can be handled by the lLen operatio
 
 [https://redis.io/commands/llen](https://redis.io/commands/llen)
 
-#### LPop
-The lPop operation is used to remove and get the first element in a list.
+#### Retrieving the first element in a list
+The lPop operation retrieves the first element in a list that is stored in a specified key.
 
 **lPop**
 ```xml
@@ -161,7 +162,7 @@ The lPop operation is used to remove and get the first element in a list.
 ```
 
 **Properties**
-* redisKey: The name of the key.
+* redisKey: The name of the key where the list is stored.
 
 **Sample request**
 
@@ -177,8 +178,8 @@ Following is a sample REST/JSON request that can be handled by the lPop operatio
 
 [https://redis.io/commands/lpop](https://redis.io/commands/lpop)
 
-#### LPush
-The lPush operation is used to prepend one or multiple values to a list.
+#### Inserting one or more elements to the head of a list
+The lPush operation inserts one or more elements to the head of a list that is stored in a specified key.
 
 **lPush**
 ```xml
@@ -189,8 +190,8 @@ The lPush operation is used to prepend one or multiple values to a list.
 ```
 
 **Properties**
-* redisKey: The name of the key.
-* redisStrings: The values to be added to the key.
+* redisKey: The name of the key where the list is stored.
+* redisStrings: One or more elements that you want to add to the head of the list.
 
 **Sample request**
 
@@ -207,8 +208,8 @@ Following is a sample REST/JSON request that can be handled by the lPush operati
 
 [https://redis.io/commands/lpush](https://redis.io/commands/lpush)
 
-#### LPushX
-The lPushX operation is used to prepend a value of an element in a list by its index.
+#### Inserting one or more elements to the head of a list, only if the list already exists
+The lPushX operation inserts one or more elements to the head of a list stored in a specified key, only if the key already exists and holds a list.
 
 **lPushX**
 ```xml
@@ -219,8 +220,8 @@ The lPushX operation is used to prepend a value of an element in a list by its i
 ```
 
 **Properties**
-* redisKey: The name of the key.
-* redisString: The values to be added to the key.
+* redisKey: The name of the key where the list is stored.
+* redisString: One or more elements that you want to add to the head of the list.
 
 **Sample request**
 
@@ -237,8 +238,8 @@ Following is a sample REST/JSON request that can be handled by the lPushx operat
 
 [https://redis.io/commands/lpushx](https://redis.io/commands/lpushx)
 
-#### LRange
-The lRange operation is used to get a range of elements from a list.
+#### Retrieving a range of elements from a list
+The lRange operation retrieves a range of elements from a list.
 
 **lRange**
 ```xml
@@ -250,9 +251,9 @@ The lRange operation is used to get a range of elements from a list.
 ```
 
 **Properties**
-* redisKey: The name of the key.
+* redisKey: The name of the key where the list is stored.
 * redisStart: The starting index.
-* redisEnd: the ending index.
+* redisEnd: The ending index.
 
 **Sample request**
 
@@ -270,8 +271,8 @@ Following is a sample REST/JSON request that can be handled by the lRange operat
 
 [https://redis.io/commands/lrange](https://redis.io/commands/lrange)
 
-#### LRem
-The lRem operation is used to remove element from a list.
+#### Removing elements from a list
+The lRem operation removes elements from a list.
 
 **lRem**
 ```xml
@@ -283,9 +284,9 @@ The lRem operation is used to remove element from a list.
 ```
 
 **Properties**
-* redisKey: The name of the key.
-* redisCount: The number of element to be remove.
-* redisValue: the value of key.
+* redisKey: The name of the key where the list is stored.
+* redisCount: The number of occurrences of the element that you want to remove.
+* redisValue: the element that you want to remove.
 
 **Sample request**
 
@@ -293,9 +294,9 @@ Following is a sample REST/JSON request that can be handled by the lRem operatio
 
 ```json
 {
-    "redisKey":"sampleKey",
-    "redisStart":"0",
-    "redisEnd":"-1"
+"redisKey":"sampleKey",
+"redisCount":"1",
+"redisValue":"sampleValue"
 }
 ```
 
@@ -303,8 +304,8 @@ Following is a sample REST/JSON request that can be handled by the lRem operatio
 
 [https://redis.io/commands/lrem](https://redis.io/commands/lrem)
 
-#### LSet
-The lSet operation is used to set the value of an element in a list by it's index.
+#### Setting the value of an element in a list by its index
+The lSet operation sets the value of an element in a list by its index.
 
 **lSet**
 ```xml
@@ -316,9 +317,9 @@ The lSet operation is used to set the value of an element in a list by it's inde
 ```
 
 **Properties**
-* redisKey: The name of the key.
+* redisKey: The name of the key where the list is stored.
 * redisIndex: The starting index.
-* redisValue: the value of key.
+* redisValue: The value of key.
 
 **Sample request**
 
@@ -336,8 +337,8 @@ Following is a sample REST/JSON request that can be handled by the lSet operatio
 
 [https://redis.io/commands/lset](https://redis.io/commands/lset)
 
-#### LTrim
-The lTrim operation is used to trim a list to the specified range.
+#### Trimming a list to a specified range
+The lTrim operation trims a list to a specified range.
 
 **lTrim**
 ```xml
@@ -349,9 +350,9 @@ The lTrim operation is used to trim a list to the specified range.
 ```
 
 **Properties**
-* redisKey: The name of the key.
+* redisKey: The name of the key where the list is stored.
 * redisStart: The starting index.
-* redisEnd: the ending index.
+* redisEnd: The ending index.
 
 **Sample request**
 
@@ -369,8 +370,8 @@ Following is a sample REST/JSON request that can be handled by the lTrim operati
 
 [https://redis.io/commands/ltrim](https://redis.io/commands/ltrim)
 
-#### RPopLPush
-The rPopLPush operation is used to remove the list element in a list, prepend it to another list and return it.
+#### Retrieving the last element in a list
+The rPopLPush operation removes the last element in a list, then inserts it to another list, and then returns it.
 
 **rPopLPush**
 ```xml
@@ -381,8 +382,8 @@ The rPopLPush operation is used to remove the list element in a list, prepend it
 ```
 
 **Properties**
-* redisSrckey: The value of source key.
-* redisDstkey: The value of destination key.
+* redisSrckey: The name of the source key from where the last element is retrieved.
+* redisDstkey: The name of destination key.
 
 **Sample request**
 
@@ -399,8 +400,8 @@ Following is a sample REST/JSON request that can be handled by the rPopLPush ope
 
 [https://redis.io/commands/rpoplpush](https://redis.io/commands/rpoplpush)
 
-#### RPush
-The rPush operation is used to append one or more multiple values to a list.
+#### Inserting one or more elements to the tail of a list
+The rPush operation inserts one or more elements to the tail of a list that is stored in a specified key.
 
 **rPush**
 ```xml
@@ -411,8 +412,8 @@ The rPush operation is used to append one or more multiple values to a list.
 ```
 
 **Properties**
-* redisKey: The value of key.
-* redisStrings: The values to be added to the key.
+* redisKey: The name of the key where the list is stored.
+* redisStrings: One or more elements that you want to add to the tail of the list.
 
 **Sample request**
 
@@ -429,8 +430,8 @@ Following is a sample REST/JSON request that can be handled by the rPush operati
 
 [https://redis.io/commands/rpush](https://redis.io/commands/rpush)
 
-#### RPushX
-The rPushX operation is used to append a value to a list, only if the list exists.
+#### Inserting one or more elements to the tail of a list, only if the list already exists
+The rPushX operation inserts one or more elements to the tail of a list stored in a specified key, only if the key already exists and holds a list.
 
 **rPushX**
 ```xml
@@ -441,8 +442,8 @@ The rPushX operation is used to append a value to a list, only if the list exist
 ```
 
 **Properties**
-* redisKey: The value of key.
-* redisValue: The value to be added to the key.
+* redisKey: The name of the key where the list is stored.
+* redisValue: One or more elements that you want to add to the tail of the list.
 
 **Sample request**
 
