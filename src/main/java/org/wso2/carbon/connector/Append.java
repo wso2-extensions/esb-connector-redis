@@ -45,6 +45,10 @@ public class Append extends AbstractConnector {
             }
         } catch (Exception e) {
             handleException("Error while connecting the server or calling the redis method", e, messageContext);
+        } finally {
+            if (jedis != null) {
+                jedis.disconnect();
+            }
         }
 
     }
