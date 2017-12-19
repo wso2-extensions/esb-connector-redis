@@ -3,28 +3,28 @@
 [[  Overview ]](#overview)  [[ Operation details ]](#operation-details)  [[  Sample configuration  ]](#sample-configuration)
 
 ### Overview 
-The following operations allow you to work with "keys". Click an operation name to see details on how to use it.
+The following operations allow you to work with keys. Click an operation name to see details on how to use it.
 
-For a sample proxy service that illustrates how to work with "keys", see [  sample configuration  ](#sample-configuration).
+For a sample proxy service that illustrates how to work with keys, see [sample configuration](#sample-configuration).
 
 | Operation        | Description |
 | ------------- |:-------------|
-| [del](#del)    | Delete a key |
-| [exists](#exists)    | Determine if a key exists |
-| [expire](#expire)    | Set a key's time to live in seconds |
-| [expireAt](#expireAt)    | Set the expiration for an existing key as a UNIX timestamp |
-| [keys](#keys)    | Find all keys matching the given pattern |
-| [randomKey](#randomKey)    | Return a random key from the keyspace |
-| [rename](#rename)    | Rename a key |
-| [renamenX](#renamenX)    | Rename a key, only if the new key does not exist |
-| [ttl](#ttl)    | Get the time to live for a key |
-| [type](#type)    | Determine the type stored at key |
+| [del](#deleting-a-key)    | Deletes a specified key |
+| [exists](#determining-the-existence-of-a-key)    | Determines whether a specified key exists |
+| [expire](#setting-a-ttl-for-a-key)    | Sets a TTL(Time to live) for a key |
+| [expireAt](#setting-an-expiration-for-a-key-in-the-unix-timestamp-format)    | Sets the expiration for an existing key as a UNIX timestamp |
+| [keys](#retrieving-keys-that-match-a-specified-pattern)    | Retrieves all keys that match a specified pattern |
+| [randomKey](#retrieving-a-random-key-from-the-keyspace)    | Retrieves a random key from the keyspace |
+| [rename](#renaming-a-key)    | Renames a key |
+| [renamenX](#renaming-a-key-only-if-the-new-key-does-not-already-exist)    | Renames an existing key to a new key, only if the new key does not already exist |
+| [ttl](#retrieving-the-ttl-of-a-key)    | Retrieves the TTL(time to live) of a key |
+| [type](#retrieving-the-data-type-of-a-value-stored-in-a-key)    | Retrieves the data type of a value stored in a key |
 
 ### Operation details
-This section provides details on the operations.
+This section provides more details on the operations.
 
-#### Del
-The del operation is used to delete a key.
+#### Deleting a key
+The del operation deletes a specified key if it exists.
 
 **del**
 ```xml
@@ -34,7 +34,7 @@ The del operation is used to delete a key.
 ```
 
 **Properties**
-* redisKey: The name of the key to delete.
+* redisKey: The name of the key that you want to delete.
 
 **Sample request**
 
@@ -50,8 +50,8 @@ Following is a sample REST/JSON request that can be handled by the del operation
 
 [https://redis.io/commands/del](https://redis.io/commands/del)
 
-#### Exists
-The exists operation is used to determine if a key exists.
+#### Determining the existence of a key
+The exists operation determines whether a specified key exists.
 
 **exists**
 ```xml
@@ -61,7 +61,7 @@ The exists operation is used to determine if a key exists.
 ```
 
 **Properties**
-* redisKey: The name of the key.
+* redisKey: The name of the key to determine existence.
 
 **Sample request**
 
@@ -77,8 +77,8 @@ Following is a sample REST/JSON request that can be handled by the exists operat
 
 [https://redis.io/commands/exists](https://redis.io/commands/exists)
 
-#### Expire
-The expire operation is used to set a key's time to live in seconds.
+#### Setting a TTL for a key
+The expire operation sets a TTL(Time to live) for a key so that the key will automatically delete once it reaches the TTL. The TTL should be specified in seconds.
 
 **expire**
 ```xml
@@ -89,7 +89,8 @@ The expire operation is used to set a key's time to live in seconds.
 ```
 
 **Properties**
-* redisKey: The name of the key.
+* redisKey: The name of the key for which you want to specify a TTL.
+* redisSeconds: The number of seconds representing the TTL that you want to set for the key.
 
 **Sample request**
 
@@ -106,8 +107,8 @@ Following is a sample REST/JSON request that can be handled by the expire operat
 
 [https://redis.io/commands/expire](https://redis.io/commands/expire)
 
-#### ExpireAt
-The expireAt operation is used to set the expiration for an existing key as a UNIX timestamp.
+#### Setting an expiration for a key in the UNIX timestamp format
+The expireAt operation sets the time after which an existing key should expire. Here the time should be specified as a UNIX timestamp.
 
 **expireAt**
 ```xml
@@ -118,8 +119,8 @@ The expireAt operation is used to set the expiration for an existing key as a UN
 ```
 
 **Properties**
-* redisKey: The name of the key.
-* redisUnixTime: The name of the key.
+* redisKey: The name of the key for which you want to set an expiration.
+* redisUnixTime: The time to expire specified in the UNIX timestamp format.
 
 **Sample request**
 
@@ -136,8 +137,8 @@ Following is a sample REST/JSON request that can be handled by the expireAt oper
 
 [https://redis.io/commands/expireat](https://redis.io/commands/expireat)
 
-#### Keys
-The keys operation is used to find all keys matching the given pattern.
+#### Retrieving keys that match a specified pattern
+The keys operation retrieves all keys that match a specified pattern.
 
 **keys**
 ```xml
@@ -147,7 +148,7 @@ The keys operation is used to find all keys matching the given pattern.
 ```
 
 **Properties**
-* redisPattern: The pattern to search.
+* redisPattern: The pattern that you want to match when retrieving keys.
 
 **Sample request**
 
@@ -163,8 +164,8 @@ Following is a sample REST/JSON request that can be handled by the keys operatio
 
 [https://redis.io/commands/keys](https://redis.io/commands/keys)
 
-#### RandomKey
-The randomKey operation is used to return a random key from the keyspace.
+#### Retrieving a random key from the keyspace
+The randomKey operation retrieves a random key from the keyspace.
 
 **randomKey**
 ```xml
@@ -173,14 +174,14 @@ The randomKey operation is used to return a random key from the keyspace.
 
 **Sample request**
 
-Sample request with empty body can be handled by the randomKey operation.
+A sample request with an empty body can be handled by the randomKey operation.
 
 **Related redis documentation**
 
 [https://redis.io/commands/randomkey](https://redis.io/commands/randomkey)
 
-#### Rename
-The rename operation is used to rename a key.
+#### Renaming a key
+The rename operation renames an existing key to a new name that is specified.
 
 **rename**
 ```xml
@@ -191,8 +192,8 @@ The rename operation is used to rename a key.
 ```
 
 **Properties**
-* redisOldKey: The name of the old key.
-* redisNewKey: The name of the new key.
+* redisOldKey: The name of an existing key that you want to rename.
+* redisNewKey: The new name that you want the key to have.
 
 **Sample request**
 
@@ -209,8 +210,8 @@ Following is a sample REST/JSON request that can be handled by the rename operat
 
 [https://redis.io/commands/rename](https://redis.io/commands/rename)
 
-#### RenamenX
-The renamenX operation is used to rename a key, only if the new key does not exist.
+#### Renaming a key only if the new key does not already exist 
+The renamenX operation renames a key to a new key, only if the new key does not already exist.
 
 **renamenX**
 ```xml
@@ -221,8 +222,8 @@ The renamenX operation is used to rename a key, only if the new key does not exi
 ```
 
 **Properties**
-* redisOldKey: The name of the old key.
-* redisNewKey: The name of the new key.
+* redisOldKey: The name of an existing key that you want to rename.
+* redisNewKey: The new name that you want the key to have.
 
 **Sample request**
 
@@ -239,8 +240,8 @@ Following is a sample REST/JSON request that can be handled by the renamenX oper
 
 [https://redis.io/commands/renamenx](https://redis.io/commands/renamenx)
 
-#### Ttl
-The ttl operation is used to get the time to live for a key.
+#### Retrieving the TTL of a key
+The ttl operation retrieves the TTL(Time to live) value of a specified key.
 
 **ttl**
 ```xml
@@ -250,7 +251,7 @@ The ttl operation is used to get the time to live for a key.
 ```
 
 **Properties**
-* redisKey: The name of the key.
+* redisKey: The name of the key for which you want to retrieve the TTL.
 
 **Sample request**
 
@@ -266,8 +267,8 @@ Following is a sample REST/JSON request that can be handled by the ttl operation
 
 [https://redis.io/commands/ttl](https://redis.io/commands/ttl)
 
-#### Type
-The type operation is used to determine the type stored at key.
+#### Retrieving the data type of a value stored in a key
+The type operation retrieves the data type of a value stored in a specified key.
 
 **type**
 ```xml
@@ -277,7 +278,7 @@ The type operation is used to determine the type stored at key.
 ```
 
 **Properties**
-* redisKey: The name of the key.
+* redisKey: The name of the key that the value is stored.
 
 **Sample request**
 
@@ -294,7 +295,7 @@ Following is a sample REST/JSON request that can be handled by the type operatio
 [https://redis.io/commands/type](https://redis.io/commands/type)
 
 ### Sample configuration
-Following is a sample proxy service that illustrates how to connect to Redis with the init operation and use the del operation. The sample request for this proxy can be found in [del sample request](#request). You can use this sample as a template for using other operations in this category.
+Following is a sample proxy service that illustrates how to connect to Redis with the init operation, and then use the del operation. The sample request for this proxy can be found in [del sample request](#request). You can use this sample as a template for using other operations in this category.
 
 **Sample Proxy**
 ```xml
