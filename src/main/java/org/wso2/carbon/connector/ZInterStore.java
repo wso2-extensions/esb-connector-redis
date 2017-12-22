@@ -32,8 +32,8 @@ public class ZInterStore extends AbstractConnector {
 
     @Override
     public void connect(MessageContext messageContext) throws ConnectException {
+        Jedis jedis = null;
         try {
-            Jedis jedis;
             RedisServer serverObj = new RedisServer();
             jedis = serverObj.connect(messageContext);
             if (jedis != null) {
@@ -46,10 +46,13 @@ public class ZInterStore extends AbstractConnector {
                 } else {
                     handleException("Redis server throw null response", messageContext);
                 }
-                jedis.disconnect();
             }
         } catch (Exception e) {
             handleException("Error while connecting the server or calling the redis method", e, messageContext);
+        } finally {
+            if (jedis != null) {
+                jedis.disconnect();
+            }
         }
     }
 }

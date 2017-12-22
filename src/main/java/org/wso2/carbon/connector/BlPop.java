@@ -31,13 +31,14 @@ public class BlPop extends AbstractConnector {
 
     @Override
     public void connect(MessageContext messageContext) throws ConnectException {
+        Jedis jedis = null;
         try {
-            Jedis jedis;
             RedisServer serverObj = new RedisServer();
             jedis = serverObj.connect(messageContext);
             if (jedis != null) {
                 String key = messageContext.getProperty(RedisConstants.KEY).toString();
-                Integer blPopTimeout = Integer.parseInt(messageContext.getProperty(RedisConstants.BLPOPTIMEOUT).toString());
+                Integer blPopTimeout = Integer
+                        .parseInt(messageContext.getProperty(RedisConstants.BLPOPTIMEOUT).toString());
                 String[] keyValue = key.split(" ");
                 List<String> response = jedis.blpop(blPopTimeout, keyValue);
                 if (response != null) {
@@ -45,10 +46,13 @@ public class BlPop extends AbstractConnector {
                 } else {
                     handleException("Redis server throw null response", messageContext);
                 }
-                jedis.disconnect();
             }
         } catch (Exception e) {
             handleException("Error while connecting the server or calling the redis method", e, messageContext);
+        } finally {
+            if (jedis != null) {
+                jedis.disconnect();
+            }
         }
     }
 }
