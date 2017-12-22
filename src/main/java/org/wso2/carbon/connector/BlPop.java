@@ -37,7 +37,8 @@ public class BlPop extends AbstractConnector {
             jedis = serverObj.connect(messageContext);
             if (jedis != null) {
                 String key = messageContext.getProperty(RedisConstants.KEY).toString();
-                Integer blPopTimeout = Integer.parseInt(messageContext.getProperty(RedisConstants.BLPOPTIMEOUT).toString());
+                Integer blPopTimeout = Integer
+                        .parseInt(messageContext.getProperty(RedisConstants.BLPOPTIMEOUT).toString());
                 String[] keyValue = key.split(" ");
                 List<String> response = jedis.blpop(blPopTimeout, keyValue);
                 if (response != null) {
