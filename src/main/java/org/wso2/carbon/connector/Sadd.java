@@ -31,8 +31,8 @@ public class Sadd extends AbstractConnector {
 
     @Override
     public void connect(MessageContext messageContext) throws ConnectException {
+        Jedis jedis = null;
         try {
-            Jedis jedis;
             RedisServer serverObj = new RedisServer();
             jedis = serverObj.connect(messageContext);
             if (jedis != null) {
@@ -45,7 +45,6 @@ public class Sadd extends AbstractConnector {
                 } else {
                     handleException("Redis server throw null response", messageContext);
                 }
-                jedis.disconnect();
             }
         } catch (Exception e) {
             throw new SynapseException("Error while connecting the server or calling the redis method", e);
