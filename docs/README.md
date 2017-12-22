@@ -10,6 +10,6 @@ For general information on using connectors and their operations in your ESB con
 
 | | Version |
 | ------------- |-------------|
-| Connector | 1.0.0 |
+| Connector | 1.0.1 |
 | jedis-2.1.0.jar | 2.1.0 |
 | Redis server | 4.0.6 |
