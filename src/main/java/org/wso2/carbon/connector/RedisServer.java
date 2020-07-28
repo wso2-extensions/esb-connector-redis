@@ -22,6 +22,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.MessageContext;
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisShardInfo;
 
 public class RedisServer {
 
@@ -29,6 +30,9 @@ public class RedisServer {
         Log log = LogFactory.getLog(this.getClass());
         int port = 0;
         int timeout = 0;
+        boolean useSsl = false;
+        String cacheKey = "";
+
         Jedis jedis = null;
         try {
             String host = messageContext.getProperty(RedisConstants.HOST).toString();
@@ -40,7 +44,20 @@ public class RedisServer {
                     && messageContext.getProperty(RedisConstants.TIMEOUT) != null) {
                 timeout = Integer.parseInt(messageContext.getProperty(RedisConstants.TIMEOUT).toString());
             }
-            if (port > 0 && timeout > 0) {
+            if (messageContext.getProperty(RedisConstants.CACHEKEY) != ""
+                    && messageContext.getProperty(RedisConstants.CACHEKEY) != null) {
+                cacheKey = messageContext.getProperty(RedisConstants.CACHEKEY).toString();
+            }
+            if (messageContext.getProperty(RedisConstants.USESSL) != ""
+                    && messageContext.getProperty(RedisConstants.USESSL) != null) {
+                useSsl = Boolean.parseBoolean(messageContext.getProperty(RedisConstants.USESSL).toString());
+            }
+
+            if (port > 0 && cacheKey != "") {
+                JedisShardInfo shardInfo = new JedisShardInfo(host, port, useSsl);
+                shardInfo.setPassword(cacheKey);
+                jedis = new Jedis(shardInfo);
+            } else if (port > 0 && timeout > 0) {
                 jedis = new Jedis(host, port, timeout);
                 return jedis;
             } else if (port > 0) {
@@ -51,7 +68,7 @@ public class RedisServer {
                 return jedis;
             }
         } catch (Exception e) {
-            log.error("Error while connecting the server", e);
+            log.error("Error while connecting to the server", e);
         }
         return jedis;
     }

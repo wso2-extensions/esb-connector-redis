@@ -60,10 +60,15 @@
             <property name="redisMessage" expression="json-eval($.redisMessage)"/>
             <property name="redisWhere" expression="json-eval($.redisWhere)"/>
             <property name="redisPivot" expression="json-eval($.redisPivot)"/>
+            <property name="useSsl" expression="json-eval($.useSsl)"/>
+            <property name="cacheKey" expression="json-eval($.cacheKey)"/>
+
             <redis.init>
                 <redisHost>{$ctx:redisHost}</redisHost>
                 <redisPort>{$ctx:redisPort}</redisPort>
                 <redisTimeout>{$ctx:redisTimeout}</redisTimeout>
+                <redisTimeout>{$ctx:cacheKey}</redisTimeout>
+                <redisTimeout>{$ctx:useSsl}</redisTimeout>
             </redis.init>
             <switch source="get-property('transport', 'Action')">
                 <case regex="urn:append">

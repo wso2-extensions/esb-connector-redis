@@ -56,4 +56,7 @@ public class RedisConstants {
     public static final String FIELDSVALUES = "redisFieldsValues";
     public static final String FIELDS = "redisFields";
     public static final String MESSAGE = "redisMessage";
+    public static final String CACHEKEY = "cacheKey";
+    public static final String CACHEHOSTNAME = "cacheHostname";
+    public static final String USESSL = "useSsl";
 }

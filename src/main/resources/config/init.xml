@@ -21,6 +21,8 @@
     <parameter name="redisHost" description="the server host"/>
     <parameter name="redisPort" description="the port to server run"/>
     <parameter name="redisTimeout" description="time to live the server in milliseconds"/>
+    <parameter name="cacheKey" description="key of the cache"/>
+    <parameter name="useSsl" description="a flag to switch between SSL and non-SSL"/>
     <sequence>
         <filter xpath="$func:redisPort = '' or  not(string($func:redisPort))">
             <then/>
@@ -39,6 +41,18 @@
             <then>
                 <property name="redisHost" value="localhost"/>
             </then>
+        </filter>
+        <filter xpath="$func:cacheKey = '' or  not(string($func:cacheKey))">
+            <then/>
+            <else>
+                <property name="cacheKey" expression="$ctx:cacheKey"/>
+            </else>
+        </filter>
+        <filter xpath="$func:useSsl = '' or  not(string($func:useSsl))">
+            <then/>
+            <else>
+                <property name="useSsl" expression="$ctx:useSsl"/>
+            </else>
         </filter>
     </sequence>
 </template>
