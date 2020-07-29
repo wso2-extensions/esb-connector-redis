@@ -19,7 +19,7 @@
 
 <template xmlns="http://ws.apache.org/ns/synapse" name="flushAll">
     <sequence>
-        <class name="org.wso2.carbon.connector.FlushAll"/>
+        <class name="org.wso2.carbon.connector.operations.FlushAll"/>
         <property name="redisResponse" expression="$ctx:result"/>
         <payloadFactory media-type="json">
             <format>

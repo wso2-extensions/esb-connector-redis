@@ -19,7 +19,7 @@
 
 <template xmlns="http://ws.apache.org/ns/synapse" name="randomKey">
     <sequence>
-        <class name="org.wso2.carbon.connector.RandomKey"/>
+        <class name="org.wso2.carbon.connector.operations.RandomKey"/>
         <property name="redisResponse" expression="$ctx:result"/>
         <payloadFactory media-type="json">
             <format>

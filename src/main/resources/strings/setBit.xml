@@ -23,7 +23,7 @@
     <sequence>
         <property name="redisKey" expression="$func:redisKey"/>
         <property name="redisValue" expression="$func:redisValue"/>
-        <class name="org.wso2.carbon.connector.SetBit"/>
+        <class name="org.wso2.carbon.connector.operations.SetBit"/>
         <property name="redisResponse" expression="$ctx:result"/>
         <payloadFactory media-type="json">
             <format>

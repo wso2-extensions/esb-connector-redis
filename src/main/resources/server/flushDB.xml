@@ -19,7 +19,7 @@
 
 <template xmlns="http://ws.apache.org/ns/synapse" name="flushDB">
     <sequence>
-        <class name="org.wso2.carbon.connector.FlushDB"/>
+        <class name="org.wso2.carbon.connector.operations.FlushDB"/>
         <property name="redisResponse" expression="$ctx:result"/>
         <payloadFactory media-type="json">
             <format>

@@ -21,7 +21,7 @@
     <parameter name="redisKeysValues" description="multiple keys and multiple values"/>
     <sequence>
         <property name="redisKeysValues" expression="$func:redisKeysValues"/>
-        <class name="org.wso2.carbon.connector.MSet"/>
+        <class name="org.wso2.carbon.connector.operations.MSet"/>
         <property name="redisResponse" expression="$ctx:result"/>
         <payloadFactory media-type="json">
             <format>

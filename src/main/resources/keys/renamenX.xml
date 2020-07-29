@@ -23,7 +23,7 @@
     <sequence>
         <property name="redisOldKey" expression="$func:redisOldKey"/>
         <property name="redisNewKey" expression="$func:redisNewKey"/>
-        <class name="org.wso2.carbon.connector.RenamenX"/>
+        <class name="org.wso2.carbon.connector.operations.RenamenX"/>
         <property name="redisResponse" expression="$ctx:result"/>
         <payloadFactory media-type="json">
             <format>

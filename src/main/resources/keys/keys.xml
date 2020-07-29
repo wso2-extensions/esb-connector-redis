@@ -21,7 +21,7 @@
     <parameter name="redisPattern" description="the pattern to search"/>
     <sequence>
         <property name="redisPattern" expression="$func:redisPattern"/>
-        <class name="org.wso2.carbon.connector.Keys"/>
+        <class name="org.wso2.carbon.connector.operations.Keys"/>
         <property name="redisResponse" expression="$ctx:result"/>
         <payloadFactory media-type="json">
             <format>

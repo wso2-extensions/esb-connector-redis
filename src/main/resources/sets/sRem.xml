@@ -23,7 +23,7 @@
     <sequence>
         <property name="redisKey" expression="$func:redisKey"/>
         <property name="redisMembers" expression="$func:redisMembers"/>
-        <class name="org.wso2.carbon.connector.SRem"/>
+        <class name="org.wso2.carbon.connector.operations.SRem"/>
         <property name="redisResponse" expression="$ctx:result"/>
         <payloadFactory media-type="json">
             <format>

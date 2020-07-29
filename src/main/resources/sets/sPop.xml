@@ -21,7 +21,7 @@
     <parameter name="redisKey" description="the name of the key"/>
     <sequence>
         <property name="redisKey" expression="$func:redisKey"/>
-        <class name="org.wso2.carbon.connector.SPop"/>
+        <class name="org.wso2.carbon.connector.operations.SPop"/>
         <property name="redisResponse" expression="$ctx:result"/>
         <payloadFactory media-type="json">
             <format>

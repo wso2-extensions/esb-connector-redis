@@ -21,7 +21,7 @@
     <parameter name="redisMessage" description="the message, which we want to print"/>
     <sequence>
         <property name="redisMessage" expression="$func:redisMessage"/>
-        <class name="org.wso2.carbon.connector.Echo"/>
+        <class name="org.wso2.carbon.connector.operations.Echo"/>
         <property name="redisResponse" expression="$ctx:result"/>
         <payloadFactory media-type="json">
             <format>

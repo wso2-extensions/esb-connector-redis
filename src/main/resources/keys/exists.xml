@@ -21,7 +21,7 @@
     <parameter name="redisKey" description="the key to check whether exists or not"/>
     <sequence>
         <property name="redisKey" expression="$func:redisKey"/>
-        <class name="org.wso2.carbon.connector.Exists"/>
+        <class name="org.wso2.carbon.connector.operations.Exists"/>
         <property name="redisResponse" expression="$ctx:result"/>
         <payloadFactory media-type="json">
             <format>
