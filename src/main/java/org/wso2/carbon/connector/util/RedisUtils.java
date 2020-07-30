@@ -58,7 +58,10 @@ public class RedisUtils {
      * @return Escaped string.
      */
     public static String escapeCharsJSON(String str) {
-        return str.replace("\"", "\\\"");
+        str = str.replace("\"", "\\\"");
+        str = str.replace("\n", "\\n");
+
+        return str;
     }
 
 }
