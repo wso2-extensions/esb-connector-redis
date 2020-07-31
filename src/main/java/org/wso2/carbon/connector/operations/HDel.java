@@ -21,6 +21,7 @@ package org.wso2.carbon.connector.operations;
 import org.apache.synapse.MessageContext;
 import org.wso2.carbon.connector.core.AbstractConnector;
 import org.wso2.carbon.connector.core.ConnectException;
+import org.wso2.carbon.connector.util.Constants;
 import org.wso2.carbon.connector.util.RedisConstants;
 import redis.clients.jedis.Jedis;
 
@@ -39,6 +40,10 @@ public class HDel extends AbstractConnector {
                 Long response = jedis.hdel(key, keyValue);
                 if (response != null) {
                     messageContext.setProperty(RedisConstants.RESULT, response);
+                    messageContext.setProperty(Constants.REDIS_RESPONSE_STATUS,
+                            Constants.REDIS_RESPONSE_SUCCESS);
+                    messageContext.setProperty(Constants.REDIS_RESPONSE_MESSAGE,
+                            "Response received successfully.");
                 } else {
                     handleException("Redis server throw null response", messageContext);
                 }

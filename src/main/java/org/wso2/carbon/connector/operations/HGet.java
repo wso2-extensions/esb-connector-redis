@@ -39,20 +39,12 @@ public class HGet extends AbstractConnector {
                 String field = messageContext.getProperty(RedisConstants.FIELD).toString();
                 String response = jedis.hget(key, field);
 
-                if (RedisUtils.isJsonPayload(response)) {
-                    response = RedisUtils.escapeCharsJSON(response);
-                    messageContext.setProperty(Constants.REDIS_MESSAGE_TYPE_PROPERTY,
-                            Constants.REDIS_MESSAGE_TYPE_JSON);
-                } else {
-                    messageContext.setProperty(Constants.REDIS_MESSAGE_TYPE_PROPERTY,
-                            Constants.REDIS_MESSAGE_TYPE_TEXT);
-                }
-
                 if (response != null) {
                     messageContext.setProperty(RedisConstants.RESULT, response);
                 } else {
-                    handleException("Redis server throw null response", messageContext);
+                    response = Constants.NULL_STRING;
                 }
+                messageContext.setProperty(RedisConstants.RESULT, response);
             }
         } catch (Exception e) {
             handleException("Error while connecting the server or calling the redis method", e, messageContext);

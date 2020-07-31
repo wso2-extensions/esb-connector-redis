@@ -25,39 +25,11 @@
         <property name="redisField" expression="$func:redisField"/>
         <class name="org.wso2.carbon.connector.operations.HGet"/>
         <property name="redisResponse" expression="$ctx:result"/>
-        <filter xpath="$func:redisResponseMessageType = '' or  not(string($func:redisResponseMessageType))">
-            <then>
-                <property name="redisResponseType" value="text"/>
-            </then>
-            <else>
-                <property name="redisResponseType" expression="$ctx:redisResponseMessageType"/>
-            </else>
-        </filter>
-        <switch source="get-property('redisResponseType')">
-            <case regex="json">
-                <payloadFactory media-type="json">
-                    <format>
-                        {
-                            "output":$1
-                        }
-                    </format>
-                    <args>
-                        <arg evaluator="xml" expression="$ctx:redisResponse"/>
-                    </args>
-                </payloadFactory>
-            </case>
-            <default>
-                <payloadFactory media-type="json">
-                    <format>
-                        {
-                            "output":"$1"
-                        }
-                    </format>
-                    <args>
-                        <arg evaluator="xml" expression="$ctx:redisResponse"/>
-                    </args>
-                </payloadFactory>
-            </default>
-        </switch>
+        <payloadFactory media-type="text">
+            <format>$1</format>
+            <args>
+                <arg evaluator="xml" expression="$ctx:redisResponse"/>
+            </args>
+        </payloadFactory>
     </sequence>
 </template>

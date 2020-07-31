@@ -41,4 +41,14 @@ public class Constants {
     public static final ArrayList<String> XML_START_CHARACTER = new ArrayList<String>() {{
         add("<");
     }};
+
+    // Miscellaneous
+    public static final String NULL_STRING = "null";
+    public static final String REDIS_RESPONSE_STATUS = "redisResponseStatus";
+    public static final String REDIS_RESPONSE_MESSAGE = "redisMessage";
+    public static final String REDIS_RESPONSE_SUCCESS = "success";
+    public static final String REDIS_RESPONSE_ERROR = "error";
+
+
+
 }
