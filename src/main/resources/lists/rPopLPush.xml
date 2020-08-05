@@ -23,7 +23,7 @@
     <sequence>
         <property name="redisSrckey" expression="$func:redisSrckey"/>
         <property name="redisDstkey" expression="$func:redisDstkey"/>
-        <class name="org.wso2.carbon.connector.RPopLPush"/>
+        <class name="org.wso2.carbon.connector.operations.RPopLPush"/>
         <property name="redisResponse" expression="$ctx:result"/>
         <payloadFactory media-type="json">
             <format>

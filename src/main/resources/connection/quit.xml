@@ -19,7 +19,7 @@
 
 <template xmlns="http://ws.apache.org/ns/synapse" name="quit">
     <sequence>
-        <class name="org.wso2.carbon.connector.Quit"/>
+        <class name="org.wso2.carbon.connector.operations.Quit"/>
         <property name="redisResponse" expression="$ctx:result"/>
         <payloadFactory media-type="json">
             <format>

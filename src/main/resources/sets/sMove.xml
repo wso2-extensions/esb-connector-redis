@@ -25,7 +25,7 @@
         <property name="redisSrckey" expression="$func:redisSrckey"/>
         <property name="redisDstkey" expression="$func:redisDstkey"/>
         <property name="redisMember" expression="$func:redisMember"/>
-        <class name="org.wso2.carbon.connector.SMove"/>
+        <class name="org.wso2.carbon.connector.operations.SMove"/>
         <property name="redisResponse" expression="$ctx:result"/>
         <payloadFactory media-type="json">
             <format>

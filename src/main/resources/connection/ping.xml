@@ -19,7 +19,7 @@
 
 <template xmlns="http://ws.apache.org/ns/synapse" name="ping">
     <sequence>
-        <class name="org.wso2.carbon.connector.Ping"/>
+        <class name="org.wso2.carbon.connector.operations.Ping"/>
         <property name="redisResponse" expression="$ctx:result"/>
         <payloadFactory media-type="json">
             <format>

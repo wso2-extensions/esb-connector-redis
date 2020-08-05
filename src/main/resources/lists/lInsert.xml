@@ -27,7 +27,7 @@
         <property name="redisWhere" expression="$func:redisWhere"/>
         <property name="redisPivot" expression="$func:redisPivot"/>
         <property name="redisValue" expression="$func:redisValue"/>
-        <class name="org.wso2.carbon.connector.LInsert"/>
+        <class name="org.wso2.carbon.connector.operations.LInsert"/>
         <property name="redisResponse" expression="$ctx:result"/>
         <payloadFactory media-type="json">
             <format>

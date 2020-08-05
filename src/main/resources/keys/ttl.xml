@@ -21,14 +21,10 @@
     <parameter name="redisKey" description="the name of the key"/>
     <sequence>
         <property name="redisKey" expression="$func:redisKey"/>
-        <class name="org.wso2.carbon.connector.Ttl"/>
+        <class name="org.wso2.carbon.connector.operations.Ttl"/>
         <property name="redisResponse" expression="$ctx:result"/>
-        <payloadFactory media-type="json">
-            <format>
-                {
-                    "output":$1
-                }
-            </format>
+        <payloadFactory media-type="text">
+            <format>$1</format>
             <args>
                 <arg evaluator="xml" expression="$ctx:redisResponse"/>
             </args>

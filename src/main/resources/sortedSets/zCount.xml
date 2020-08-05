@@ -25,7 +25,7 @@
         <property name="redisKey" expression="$func:redisKey"/>
         <property name="redisMin" expression="$func:redisMin"/>
         <property name="redisMax" expression="$func:redisMax"/>
-        <class name="org.wso2.carbon.connector.ZCount"/>
+        <class name="org.wso2.carbon.connector.operations.ZCount"/>
         <property name="redisResponse" expression="$ctx:result"/>
         <payloadFactory media-type="json">
             <format>

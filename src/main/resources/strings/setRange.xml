@@ -25,7 +25,7 @@
         <property name="redisKey" expression="$func:redisKey"/>
         <property name="redisValue" expression="$func:redisValue"/>
         <property name="redisOffset" expression="$func:redisOffset"/>
-        <class name="org.wso2.carbon.connector.SetRange"/>
+        <class name="org.wso2.carbon.connector.operations.SetRange"/>
         <property name="redisResponse" expression="$ctx:result"/>
         <payloadFactory media-type="json">
             <format>

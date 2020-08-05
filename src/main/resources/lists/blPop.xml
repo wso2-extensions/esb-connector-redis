@@ -23,7 +23,7 @@
     <sequence>
         <property name="redisKey" expression="$func:redisKey"/>
         <property name="redisBlPopTimeout" expression="$func:redisBlPopTimeout"/>
-        <class name="org.wso2.carbon.connector.BlPop"/>
+        <class name="org.wso2.carbon.connector.operations.BlPop"/>
         <property name="redisResponse" expression="$ctx:result"/>
         <payloadFactory media-type="json">
             <format>
