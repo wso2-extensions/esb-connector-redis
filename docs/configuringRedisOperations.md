@@ -2,7 +2,7 @@
 
 ### Download and set up Redis
 
-1. Download the jedis-2.1.0.jar file from [https://mvnrepository.com/artifact/redis.clients/jedis/2.1.0](https://mvnrepository.com/artifact/redis.clients/jedis/2.1.0) and copy it to the <EI_Home>/lib directory.
+1. Download the jedis-2.10.2.jar file from [https://mvnrepository.com/artifact/redis.clients/jedis/2.10.2](https://mvnrepository.com/artifact/redis.clients/jedis/2.1.0) and copy it to the <EI_Home>/lib directory.
 
 2. Download the Redis server from http://redis.io/download, and start it.
 
@@ -16,6 +16,18 @@ To use the Redis connector, add the <redis.init> element in your configuration b
     <redisTimeout>{$ctx:redisTimeout}</redisTimeout>
 </redis.init>
 ```
+If you are connecting using a cache key, use the following init configuration.
+
+```xml
+<redis.init>
+    <redisHost>{$ctx:redisHost}</redisHost>
+    <redisPort>{$ctx:redisPort}</redisPort>
+    <redisTimeout>{$ctx:redisTimeout}</redisTimeout>
+    <cacheKey>{$ctx:cacheKey}</cacheKey>
+    <useSsl>{$ctx:useSsl}</useSsl>
+</redis.init>
+```
+
 **Properties** 
 * redisHost: The Redis host name (default localhost).
 * redisPort: The port on which the Redis server is running (The default port is 6379).
