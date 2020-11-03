@@ -59,4 +59,14 @@ public class RedisConstants {
     public static final String CACHEKEY = "cacheKey";
     public static final String CACHEHOSTNAME = "cacheHostname";
     public static final String USESSL = "useSsl";
+    public static final String CONNECTION_TIMEOUT = "redisConnectionTimeout";
+    public static final String REDIS_CLUSTER_ENABLED = "redisClusterEnabled";
+    public static final String CLUSTER_NODES = "clusterNodes";
+    public static final String CLIENT_NAME = "clientName";
+    public static final String MAX_ATTEMPTS = "maxAttempts";
+    public static final String WEIGHT = "weight";
+
+    public static final int DEFAULT_TIMEOUT = 2000;
+    public static final int DEFAULT_MAX_ATTEMPTS = 5;
+    public static final int DEFAULT_WEIGHT = 1;
 }

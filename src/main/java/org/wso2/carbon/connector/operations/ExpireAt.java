@@ -28,25 +28,28 @@ public class ExpireAt extends AbstractConnector {
 
     @Override
     public void connect(MessageContext messageContext) throws ConnectException {
-        Jedis jedis = null;
+        RedisServer serverObj = null;
         try {
-            RedisServer serverObj = new RedisServer();
-            jedis = serverObj.connect(messageContext);
-            if (jedis != null) {
-                String key = messageContext.getProperty(RedisConstants.KEY).toString();
-                Long unixTime = Long.parseLong(messageContext.getProperty(RedisConstants.UNIXTIME).toString());
-                Long response = jedis.expireAt(key, unixTime);
-                if (response != null) {
-                    messageContext.setProperty(RedisConstants.RESULT, response);
-                } else {
-                    handleException("Redis server throw null response", messageContext);
-                }
+            serverObj = new RedisServer(messageContext);
+            String key = messageContext.getProperty(RedisConstants.KEY).toString();
+            long unixTime = Long.parseLong(messageContext.getProperty(RedisConstants.UNIXTIME).toString());
+            Long response;
+            if (serverObj.isClusterEnabled()) {
+                response = serverObj.getJedisCluster().expireAt(key, unixTime);
+            } else {
+                response = serverObj.getJedis().expireAt(key, unixTime);
+            }
+
+            if (response != null) {
+                messageContext.setProperty(RedisConstants.RESULT, response);
+            } else {
+                handleException("Redis server throw null response", messageContext);
             }
         } catch (Exception e) {
             handleException("Error while connecting the server or calling the redis method", e, messageContext);
         } finally {
-            if (jedis != null) {
-                jedis.disconnect();
+            if (serverObj != null) {
+                serverObj.close();
             }
         }
     }

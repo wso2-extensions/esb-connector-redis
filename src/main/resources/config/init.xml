@@ -18,22 +18,33 @@
 -->
 
 <template name="init" xmlns="http://ws.apache.org/ns/synapse">
-    <parameter name="redisHost" description="the server host"/>
-    <parameter name="redisPort" description="the port to server run"/>
+    <parameter name="redisConnectionTimeout" description="time to live the connection in milliseconds"/>
     <parameter name="redisTimeout" description="time to live the server in milliseconds"/>
     <parameter name="cacheKey" description="key of the cache"/>
     <parameter name="useSsl" description="a flag to switch between SSL and non-SSL"/>
+
+    <!-- standalone mode specific parameters-->
+    <parameter name="redisHost" description="the server host"/>
+    <parameter name="redisPort" description="the port to server run"/>
+    <parameter name="weight" description="weight of the shard"/>
+
+    <!-- cluster specific parameters -->
+    <parameter name="redisClusterEnabled" description="a flag to enable cluster mode"/>
+    <parameter name="clusterNodes" description="comma separated list of the cluster nodes (host:port)"/>
+    <parameter name="clientName" description="name of the client"/>
+    <parameter name="maxAttempts" description="the number of retries"/>
+
     <sequence>
         <filter xpath="$func:redisPort = '' or  not(string($func:redisPort))">
             <then/>
             <else>
-                <property name="redisPort" expression="$ctx:redisPort"/>
+                <property name="redisPort" expression="$func:redisPort"/>
             </else>
         </filter>
         <filter xpath="$func:redisTimeout = '' or  not(string($func:redisTimeout))">
             <then/>
             <else>
-                <property name="redisTimeout" expression="$ctx:redisTimeout"/>
+                <property name="redisTimeout" expression="$func:redisTimeout"/>
             </else>
         </filter>
         <property name="redisHost" expression="$func:redisHost"/>
@@ -45,13 +56,49 @@
         <filter xpath="$func:cacheKey = '' or  not(string($func:cacheKey))">
             <then/>
             <else>
-                <property name="cacheKey" expression="$ctx:cacheKey"/>
+                <property name="cacheKey" expression="$func:cacheKey"/>
             </else>
         </filter>
         <filter xpath="$func:useSsl = '' or  not(string($func:useSsl))">
             <then/>
             <else>
-                <property name="useSsl" expression="$ctx:useSsl"/>
+                <property name="useSsl" expression="$func:useSsl"/>
+            </else>
+        </filter>
+        <filter xpath="$func:redisConnectionTimeout = '' or  not(string($func:redisConnectionTimeout))">
+            <then/>
+            <else>
+                <property name="redisConnectionTimeout" expression="$func:redisConnectionTimeout"/>
+            </else>
+        </filter>
+        <filter xpath="$func:redisClusterEnabled = '' or  not(string($func:redisClusterEnabled))">
+            <then/>
+            <else>
+                <property name="redisClusterEnabled" expression="$func:redisClusterEnabled"/>
+            </else>
+        </filter>
+        <filter xpath="$func:clusterNodes = '' or  not(string($func:clusterNodes))">
+            <then/>
+            <else>
+                <property name="clusterNodes" expression="$func:clusterNodes"/>
+            </else>
+        </filter>
+        <filter xpath="$func:clientName = '' or  not(string($func:clientName))">
+            <then/>
+            <else>
+                <property name="clientName" expression="$func:clientName"/>
+            </else>
+        </filter>
+        <filter xpath="$func:maxAttempts = '' or  not(string($func:maxAttempts))">
+            <then/>
+            <else>
+                <property name="maxAttempts" expression="$func:maxAttempts"/>
+            </else>
+        </filter>
+        <filter xpath="$func:weight = '' or  not(string($func:weight))">
+            <then/>
+            <else>
+                <property name="weight" expression="$func:weight"/>
             </else>
         </filter>
     </sequence>

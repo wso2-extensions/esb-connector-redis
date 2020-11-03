@@ -22,32 +22,34 @@ import org.apache.synapse.MessageContext;
 import org.wso2.carbon.connector.core.AbstractConnector;
 import org.wso2.carbon.connector.core.ConnectException;
 import org.wso2.carbon.connector.util.RedisConstants;
-import redis.clients.jedis.Jedis;
 
 public class ZUnionStore extends AbstractConnector {
 
     @Override
     public void connect(MessageContext messageContext) throws ConnectException {
-        Jedis jedis = null;
+        RedisServer serverObj = null;
         try {
-            RedisServer serverObj = new RedisServer();
-            jedis = serverObj.connect(messageContext);
-            if (jedis != null) {
-                String dstKey = messageContext.getProperty(RedisConstants.DSTKEY).toString();
-                String sets = messageContext.getProperty(RedisConstants.SETS).toString();
-                String[] keyValue = sets.split(" ");
-                Long response = jedis.zunionstore(dstKey, keyValue);
-                if (response != null) {
-                    messageContext.setProperty(RedisConstants.RESULT, response);
-                } else {
-                    handleException("Redis server throw null response", messageContext);
-                }
+            serverObj = new RedisServer(messageContext);
+            String dstKey = messageContext.getProperty(RedisConstants.DSTKEY).toString();
+            String sets = messageContext.getProperty(RedisConstants.SETS).toString();
+            String[] keyValue = sets.split(" ");
+            Long response;
+
+            if (serverObj.isClusterEnabled()) {
+                response = serverObj.getJedisCluster().zunionstore(dstKey, keyValue);
+            } else {
+                response = serverObj.getJedis().zunionstore(dstKey, keyValue);
+            }
+            if (response != null) {
+                messageContext.setProperty(RedisConstants.RESULT, response);
+            } else {
+                handleException("Redis server throw null response", messageContext);
             }
         } catch (Exception e) {
             handleException("Error while connecting the server or calling the redis method", e, messageContext);
         } finally {
-            if (jedis != null) {
-                jedis.disconnect();
+            if (serverObj != null) {
+                serverObj.close();
             }
         }
     }
