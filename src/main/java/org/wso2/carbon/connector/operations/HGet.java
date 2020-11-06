@@ -30,27 +30,29 @@ public class HGet extends AbstractConnector {
 
     @Override
     public void connect(MessageContext messageContext) throws ConnectException {
-        Jedis jedis = null;
+        RedisServer serverObj = null;
         try {
-            RedisServer serverObj = new RedisServer();
-            jedis = serverObj.connect(messageContext);
-            if (jedis != null) {
-                String key = messageContext.getProperty(RedisConstants.KEY).toString();
-                String field = messageContext.getProperty(RedisConstants.FIELD).toString();
-                String response = jedis.hget(key, field);
+            serverObj = new RedisServer(messageContext);
+            String key = messageContext.getProperty(RedisConstants.KEY).toString();
+            String field = messageContext.getProperty(RedisConstants.FIELD).toString();
+            String response;
 
-                if (response != null) {
-                    messageContext.setProperty(RedisConstants.RESULT, response);
-                } else {
-                    response = Constants.NULL_STRING;
-                }
-                messageContext.setProperty(RedisConstants.RESULT, response);
+            if (serverObj.isClusterEnabled()) {
+                response = serverObj.getJedisCluster().hget(key, field);
+            } else {
+                response = serverObj.getJedis().hget(key, field);
             }
+            if (response != null) {
+                messageContext.setProperty(RedisConstants.RESULT, response);
+            } else {
+                response = Constants.NULL_STRING;
+            }
+            messageContext.setProperty(RedisConstants.RESULT, response);
         } catch (Exception e) {
             handleException("Error while connecting the server or calling the redis method", e, messageContext);
         } finally {
-            if (jedis != null) {
-                jedis.disconnect();
+            if (serverObj != null) {
+                serverObj.close();
             }
         }
     }

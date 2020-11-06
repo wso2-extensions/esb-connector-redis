@@ -18,59 +18,180 @@
 
 package org.wso2.carbon.connector.operations;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.apache.synapse.MessageContext;
+import org.apache.synapse.SynapseException;
 import org.wso2.carbon.connector.util.RedisConstants;
+import redis.clients.jedis.HostAndPort;
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisCluster;
 import redis.clients.jedis.JedisShardInfo;
+
+import java.util.HashSet;
+import java.util.Objects;
 
 public class RedisServer {
 
-    public Jedis connect(MessageContext messageContext) {
-        Log log = LogFactory.getLog(this.getClass());
-        int port = 0;
-        int timeout = 0;
-        boolean useSsl = false;
-        String cacheKey = "";
+    private Jedis jedis;
+    private JedisCluster jedisCluster;
 
-        Jedis jedis = null;
-        try {
-            String host = messageContext.getProperty(RedisConstants.HOST).toString();
-            if (messageContext.getProperty(RedisConstants.PORT) != ""
-                    && messageContext.getProperty(RedisConstants.PORT) != null) {
-                port = Integer.parseInt(messageContext.getProperty(RedisConstants.PORT).toString());
-            }
-            if (messageContext.getProperty(RedisConstants.TIMEOUT) != ""
-                    && messageContext.getProperty(RedisConstants.TIMEOUT) != null) {
-                timeout = Integer.parseInt(messageContext.getProperty(RedisConstants.TIMEOUT).toString());
-            }
-            if (messageContext.getProperty(RedisConstants.CACHEKEY) != ""
-                    && messageContext.getProperty(RedisConstants.CACHEKEY) != null) {
-                cacheKey = messageContext.getProperty(RedisConstants.CACHEKEY).toString();
-            }
-            if (messageContext.getProperty(RedisConstants.USESSL) != ""
-                    && messageContext.getProperty(RedisConstants.USESSL) != null) {
-                useSsl = Boolean.parseBoolean(messageContext.getProperty(RedisConstants.USESSL).toString());
-            }
+    private MessageContext messageContext;
+    private Boolean isClusterEnabled = false;
+    private int timeout = RedisConstants.DEFAULT_TIMEOUT;
+    private int connectionTimeout;
+    private boolean useSsl = false;
+    private String cacheKey = null;
 
-            if (port > 0 && cacheKey != "") {
-                JedisShardInfo shardInfo = new JedisShardInfo(host, port, useSsl);
-                shardInfo.setPassword(cacheKey);
-                jedis = new Jedis(shardInfo);
-            } else if (port > 0 && timeout > 0) {
-                jedis = new Jedis(host, port, timeout);
-                return jedis;
-            } else if (port > 0) {
-                jedis = new Jedis(host, port);
-                return jedis;
-            } else {
-                jedis = new Jedis(host);
-                return jedis;
-            }
-        } catch (Exception e) {
-            log.error("Error while connecting to the server", e);
+    public RedisServer(MessageContext messageContext) {
+        this.messageContext = messageContext;
+
+        String redisClusterEnabled = (String) messageContext.getProperty(RedisConstants.REDIS_CLUSTER_ENABLED);
+        if (redisClusterEnabled != null && !redisClusterEnabled.isEmpty()) {
+            isClusterEnabled = Boolean.parseBoolean(redisClusterEnabled);
         }
+        String soTimeoutProp = (String) messageContext.getProperty(RedisConstants.TIMEOUT);
+        String connectionTimeoutProp = (String) messageContext.getProperty(RedisConstants.CONNECTION_TIMEOUT);
+        String cacheKeyProp = (String) messageContext.getProperty(RedisConstants.CACHEKEY);
+        String sslProp = (String) messageContext.getProperty(RedisConstants.USESSL);
+
+        if (soTimeoutProp != null && !soTimeoutProp.isEmpty()) {
+            try {
+                timeout = Integer.parseInt(soTimeoutProp);
+            } catch (NumberFormatException e) {
+                throw new SynapseException(
+                        "Invalid input for \"redisTimeout\". Cannot parse " + soTimeoutProp + " to an Integer.", e);
+            }
+        }
+        if (connectionTimeoutProp != null && !connectionTimeoutProp.isEmpty()) {
+            try {
+                connectionTimeout = Integer.parseInt(connectionTimeoutProp);
+            } catch (NumberFormatException e) {
+                throw new SynapseException(
+                        "Invalid input for \"redisConnectionTimeout\". Cannot parse " + connectionTimeoutProp
+                                + " to an Integer.", e);
+            }
+        } else {
+            // setting socket timeout value as the default value of connection timeout
+            connectionTimeout = timeout;
+        }
+
+        if (cacheKeyProp != null && !cacheKeyProp.isEmpty()) {
+            cacheKey = cacheKeyProp;
+        }
+
+        if (sslProp != null && !sslProp.isEmpty()) {
+            useSsl = Boolean.parseBoolean(sslProp);
+        }
+    }
+
+    /**
+     * Create a Jedis instance according to the parameters given.
+     *
+     * @return Jedis instance
+     */
+    private Jedis createJedis() {
+        String host = messageContext.getProperty(RedisConstants.HOST).toString();
+        int port;
+        int weight = RedisConstants.DEFAULT_WEIGHT;
+
+        String portProp = (String) messageContext.getProperty(RedisConstants.PORT);
+        if (portProp != null && !portProp.isEmpty()) {
+            try {
+                port = Integer.parseInt(portProp);
+            } catch (NumberFormatException e) {
+                throw new SynapseException(
+                        "Invalid input for \"redisPort\". Cannot parse " + portProp + " to an Integer.", e);
+            }
+        } else {
+            throw new SynapseException("Value for \"redisPort\" cannot be empty");
+        }
+
+        String weightProp = (String) messageContext.getProperty(RedisConstants.WEIGHT);
+        if (weightProp != null && !weightProp.isEmpty()) {
+            try {
+                weight = Integer.parseInt(weightProp);
+            } catch (NumberFormatException e) {
+                throw new SynapseException(
+                        "Invalid input for \"weight\". Cannot parse " + weightProp + " to an Integer.", e);
+            }
+        }
+
+        if (!Objects.isNull(cacheKey) && !cacheKey.isEmpty()) {
+            JedisShardInfo shardInfo = new JedisShardInfo(host, port, connectionTimeout, timeout, weight, useSsl);
+            shardInfo.setPassword(cacheKey);
+            return new Jedis(shardInfo);
+        }
+        return new Jedis(host, port, connectionTimeout, timeout, useSsl);
+    }
+
+    /**
+     * Create a JedisCluster instance according to the parameters given.
+     *
+     * @return JedisCluster instance
+     */
+    private JedisCluster createJedisCluster() {
+
+        String clusterNodes;
+        String clientName = null;
+        int maxAttempts = RedisConstants.DEFAULT_MAX_ATTEMPTS;
+
+        String clusterNodesProp = (String) messageContext.getProperty(RedisConstants.CLUSTER_NODES);
+        String clientNameProp = (String) messageContext.getProperty(RedisConstants.CLIENT_NAME);
+        String maxAttemptsProp = (String) messageContext.getProperty(RedisConstants.MAX_ATTEMPTS);
+
+        if (clusterNodesProp != null && !clusterNodesProp.isEmpty()) {
+            clusterNodes = clusterNodesProp;
+        } else {
+            throw new SynapseException("Redis cluster nodes cannot be empty");
+        }
+        if (clientNameProp != null && !clientNameProp.isEmpty()) {
+            clientName = clientNameProp;
+        }
+
+        if (maxAttemptsProp != null && !maxAttemptsProp.isEmpty()) {
+            try {
+                maxAttempts = Integer.parseInt(maxAttemptsProp);
+            } catch (NumberFormatException e) {
+                throw new SynapseException(
+                        "Invalid input for \"maxAttempts\". Cannot parse " + maxAttemptsProp + " to an Integer.", e);
+            }
+        }
+
+        String[] redisNodes = clusterNodes.split(",");
+        HashSet<HostAndPort> jedisClusterNodes = new HashSet<>();
+        for (String nodeConfig : redisNodes) {
+            String[] redisNode = nodeConfig.split(":");
+            jedisClusterNodes.add(new HostAndPort(redisNode[0].trim(), Integer.parseInt(redisNode[1].trim())));
+        }
+
+        return new JedisCluster(jedisClusterNodes, connectionTimeout, timeout, maxAttempts,
+                                cacheKey, clientName, new GenericObjectPoolConfig(),
+                                useSsl);
+    }
+
+    public Jedis getJedis() {
+        this.jedis = createJedis();
         return jedis;
+    }
+
+    public JedisCluster getJedisCluster() {
+        this.jedisCluster = createJedisCluster();
+        return jedisCluster;
+    }
+
+    /**
+     * Close the datasources objects associated Jedis and JedisCluster instances.
+     */
+    public void close() {
+        if (jedis != null) {
+            jedis.close();
+        }
+        if (jedisCluster != null) {
+            jedisCluster.close();
+        }
+    }
+
+    public Boolean isClusterEnabled() {
+        return isClusterEnabled;
     }
 }

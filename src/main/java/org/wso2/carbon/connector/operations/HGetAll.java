@@ -30,24 +30,27 @@ public class HGetAll extends AbstractConnector {
 
     @Override
     public void connect(MessageContext messageContext) throws ConnectException {
-        Jedis jedis = null;
+        RedisServer serverObj = null;
         try {
-            RedisServer serverObj = new RedisServer();
-            jedis = serverObj.connect(messageContext);
-            if (jedis != null) {
-                String key = messageContext.getProperty(RedisConstants.KEY).toString();
-                Map<String, String> response = jedis.hgetAll(key);
-                if (response != null) {
-                    messageContext.setProperty(RedisConstants.RESULT, response.toString());
-                } else {
-                    handleException("Redis server throw null response", messageContext);
-                }
+            serverObj = new RedisServer(messageContext);
+            String key = messageContext.getProperty(RedisConstants.KEY).toString();
+            Map<String, String> response;
+
+            if (serverObj.isClusterEnabled()) {
+                response = serverObj.getJedisCluster().hgetAll(key);
+            } else {
+                response = serverObj.getJedis().hgetAll(key);
+            }
+            if (response != null) {
+                messageContext.setProperty(RedisConstants.RESULT, response.toString());
+            } else {
+                handleException("Redis server throw null response", messageContext);
             }
         } catch (Exception e) {
             handleException("Error while connecting the server or calling the redis method", e, messageContext);
         } finally {
-            if (jedis != null) {
-                jedis.disconnect();
+            if (serverObj != null) {
+                serverObj.close();
             }
         }
     }

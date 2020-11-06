@@ -22,31 +22,33 @@ import org.apache.synapse.MessageContext;
 import org.wso2.carbon.connector.core.AbstractConnector;
 import org.wso2.carbon.connector.core.ConnectException;
 import org.wso2.carbon.connector.util.RedisConstants;
-import redis.clients.jedis.Jedis;
 
 public class Rename extends AbstractConnector {
 
     @Override
     public void connect(MessageContext messageContext) throws ConnectException {
-        Jedis jedis = null;
+        RedisServer serverObj = null;
         try {
-            RedisServer serverObj = new RedisServer();
-            jedis = serverObj.connect(messageContext);
-            if (jedis != null) {
-                String oldKey = messageContext.getProperty(RedisConstants.OLDKEY).toString();
-                String newKey = messageContext.getProperty(RedisConstants.NEWKEY).toString();
-                String response = jedis.rename(oldKey, newKey);
-                if (response != null) {
-                    messageContext.setProperty(RedisConstants.RESULT, response);
-                } else {
-                    handleException("Redis server throw null response", messageContext);
-                }
+            serverObj = new RedisServer(messageContext);
+            String oldKey = messageContext.getProperty(RedisConstants.OLDKEY).toString();
+            String newKey = messageContext.getProperty(RedisConstants.NEWKEY).toString();
+            String response;
+
+            if (serverObj.isClusterEnabled()) {
+                response = serverObj.getJedisCluster().rename(oldKey, newKey);
+            } else {
+                response = serverObj.getJedis().rename(oldKey, newKey);
+            }
+            if (response != null) {
+                messageContext.setProperty(RedisConstants.RESULT, response);
+            } else {
+                handleException("Redis server throw null response", messageContext);
             }
         } catch (Exception e) {
             handleException("Error while connecting the server or calling the redis method", e, messageContext);
         } finally {
-            if (jedis != null) {
-                jedis.disconnect();
+            if (serverObj != null) {
+                serverObj.close();
             }
         }
     }

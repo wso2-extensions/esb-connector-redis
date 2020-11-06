@@ -22,34 +22,36 @@ import org.apache.synapse.MessageContext;
 import org.wso2.carbon.connector.core.AbstractConnector;
 import org.wso2.carbon.connector.core.ConnectException;
 import org.wso2.carbon.connector.util.RedisConstants;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.BinaryClient.LIST_POSITION;
+import redis.clients.jedis.ListPosition;
 
 public class LInsert extends AbstractConnector {
 
     @Override
     public void connect(MessageContext messageContext) throws ConnectException {
-        Jedis jedis = null;
+        RedisServer serverObj = null;
         try {
-            RedisServer serverObj = new RedisServer();
-            jedis = serverObj.connect(messageContext);
-            if (jedis != null) {
-                String key = messageContext.getProperty(RedisConstants.KEY).toString();
-                LIST_POSITION where = LIST_POSITION.valueOf(messageContext.getProperty(RedisConstants.WHERE).toString());
-                String pivot = messageContext.getProperty(RedisConstants.PIVOT).toString();
-                String value = messageContext.getProperty(RedisConstants.VALUE).toString();
-                Long response = jedis.linsert(key, where, pivot, value);
-                if (response != null) {
-                    messageContext.setProperty(RedisConstants.RESULT, response);
-                } else {
-                    handleException("Redis server throw null response", messageContext);
-                }
+            serverObj = new RedisServer(messageContext);
+            String key = messageContext.getProperty(RedisConstants.KEY).toString();
+            ListPosition where = ListPosition.valueOf(messageContext.getProperty(RedisConstants.WHERE).toString());
+            String pivot = messageContext.getProperty(RedisConstants.PIVOT).toString();
+            String value = messageContext.getProperty(RedisConstants.VALUE).toString();
+            Long response;
+
+            if (serverObj.isClusterEnabled()) {
+                response = serverObj.getJedisCluster().linsert(key, where, pivot, value);
+            } else {
+                response = serverObj.getJedis().linsert(key, where, pivot, value);
+            }
+            if (response != null) {
+                messageContext.setProperty(RedisConstants.RESULT, response);
+            } else {
+                handleException("Redis server throw null response", messageContext);
             }
         } catch (Exception e) {
             handleException("Error while connecting the server or calling the redis method", e, messageContext);
         } finally {
-            if (jedis != null) {
-                jedis.disconnect();
+            if (serverObj != null) {
+                serverObj.close();
             }
         }
     }

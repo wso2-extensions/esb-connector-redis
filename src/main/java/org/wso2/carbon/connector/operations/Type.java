@@ -28,24 +28,27 @@ public class Type extends AbstractConnector {
 
     @Override
     public void connect(MessageContext messageContext) throws ConnectException {
-        Jedis jedis = null;
+        RedisServer serverObj = null;
         try {
-            RedisServer serverObj = new RedisServer();
-            jedis = serverObj.connect(messageContext);
-            if (jedis != null) {
-                String key = messageContext.getProperty(RedisConstants.KEY).toString();
-                String response = jedis.type(key);
-                if (response != null) {
-                    messageContext.setProperty(RedisConstants.RESULT, response);
-                } else {
-                    handleException("Redis server throw null response", messageContext);
-                }
+            serverObj = new RedisServer(messageContext);
+            String key = messageContext.getProperty(RedisConstants.KEY).toString();
+            String response;
+
+            if (serverObj.isClusterEnabled()) {
+                response = serverObj.getJedisCluster().type(key);
+            } else {
+                response = serverObj.getJedis().type(key);
+            }
+            if (response != null) {
+                messageContext.setProperty(RedisConstants.RESULT, response);
+            } else {
+                handleException("Redis server throw null response", messageContext);
             }
         } catch (Exception e) {
             handleException("Error while connecting the server or calling the redis method", e, messageContext);
         } finally {
-            if (jedis != null) {
-                jedis.disconnect();
+            if (serverObj != null) {
+                serverObj.close();
             }
         }
     }
