@@ -27,6 +27,8 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisCluster;
 import redis.clients.jedis.JedisShardInfo;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashSet;
 import java.util.Objects;
 
@@ -90,6 +92,17 @@ public class RedisServer {
      * @return Jedis instance
      */
     private Jedis createJedis() {
+        String connectionURIProp = (String) messageContext.getProperty(RedisConstants.CONNECTION_URI);
+        if (connectionURIProp != null) {
+            try {
+                URI connectionURI = new URI(connectionURIProp);
+                return new Jedis(new JedisShardInfo(connectionURI));
+            } catch (URISyntaxException e) {
+                throw new SynapseException(
+                        "Invalid input for \"redisConnectionURI\". Please provide a URI with valid syntax", e);
+            }
+        }
+
         String host = messageContext.getProperty(RedisConstants.HOST).toString();
         int port;
         int weight = RedisConstants.DEFAULT_WEIGHT;
