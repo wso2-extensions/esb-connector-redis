@@ -96,7 +96,10 @@ public class RedisServer {
         if (connectionURIProp != null) {
             try {
                 URI connectionURI = new URI(connectionURIProp);
-                return new Jedis(new JedisShardInfo(connectionURI));
+                JedisShardInfo shardInfo = new JedisShardInfo(connectionURI);
+                shardInfo.setSoTimeout(timeout);
+                shardInfo.setConnectionTimeout(connectionTimeout);
+                return new Jedis(shardInfo);
             } catch (URISyntaxException e) {
                 throw new SynapseException(
                         "Invalid input for \"redisConnectionURI\". Please provide a URI with valid syntax", e);
