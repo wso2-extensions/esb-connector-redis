@@ -22,6 +22,7 @@ public class RedisConstants {
     public static final String PORT = "redisPort";
     public static final String TIMEOUT = "redisTimeout";
     public static final String HOST = "redisHost";
+    public static final String CONNECTION_URI = "redisConnectionURI";
     public static final String RESULT = "result";
     public static final String KEY = "redisKey";
     public static final String VALUE = "redisValue";

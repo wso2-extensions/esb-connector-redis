@@ -27,6 +27,7 @@
     <parameter name="redisHost" description="the server host"/>
     <parameter name="redisPort" description="the port to server run"/>
     <parameter name="weight" description="weight of the shard"/>
+    <parameter name="redisConnectionURI" description="redis connection URI"/>
 
     <!-- cluster specific parameters -->
     <parameter name="redisClusterEnabled" description="a flag to enable cluster mode"/>
@@ -99,6 +100,12 @@
             <then/>
             <else>
                 <property name="weight" expression="$func:weight"/>
+            </else>
+        </filter>
+        <filter xpath="$func:redisConnectionURI = '' or not(string($func:redisConnectionURI))">
+            <then/>
+            <else>
+                <property name="redisConnectionURI" expression="$func:redisConnectionURI"/>
             </else>
         </filter>
     </sequence>
