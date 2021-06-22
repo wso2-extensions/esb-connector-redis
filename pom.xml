@@ -23,7 +23,7 @@
     <groupId>org.wso2.carbon.connector</groupId>
     <artifactId>org.wso2.carbon.connector.redis</artifactId>
     <packaging>jar</packaging>
-    <version>2.1.1-SNAPSHOT</version>
+    <version>2.2.0</version>
     <name>WSO2 Carbon - Mediation Library Connector For Redis</name>
     <url>http://wso2.org</url>
     <properties>
