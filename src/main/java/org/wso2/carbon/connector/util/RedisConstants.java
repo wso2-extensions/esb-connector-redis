@@ -70,4 +70,10 @@ public class RedisConstants {
     public static final int DEFAULT_TIMEOUT = 2000;
     public static final int DEFAULT_MAX_ATTEMPTS = 5;
     public static final int DEFAULT_WEIGHT = 1;
+    
+     public static final String SENTINEL_ENABLED = "sentinelEnabled";
+     public static final String MASTER_NAME = "masterName";
+     public static final String SENTINELS = "sentinels";
+     public static final String MASTER_PASSWORD = "masterPassword";
+     public static final String SENTINEL_PASSWORD ="sentinelPassword";
 }

@@ -25,10 +25,12 @@ import org.wso2.carbon.connector.util.RedisConstants;
 import redis.clients.jedis.HostAndPort;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisCluster;
+import redis.clients.jedis.JedisSentinelPool;
 import redis.clients.jedis.JedisShardInfo;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Objects;
 
@@ -43,6 +45,11 @@ public class RedisServer {
     private int connectionTimeout;
     private boolean useSsl = false;
     private String cacheKey = null;
+    private boolean isSentinelEnabled = false;
+    private String masterName;
+    private java.util.Set<String> sentinels;
+    private String masterPassword;
+    private String sentinelPassword;
 
     public RedisServer(MessageContext messageContext) {
         this.messageContext = messageContext;
@@ -55,6 +62,11 @@ public class RedisServer {
         String connectionTimeoutProp = (String) messageContext.getProperty(RedisConstants.CONNECTION_TIMEOUT);
         String cacheKeyProp = (String) messageContext.getProperty(RedisConstants.CACHEKEY);
         String sslProp = (String) messageContext.getProperty(RedisConstants.USESSL);
+
+        String sentinelEnabled = (String) messageContext.getProperty(RedisConstants.SENTINEL_ENABLED);
+        if (sentinelEnabled != null && !sentinelEnabled.isEmpty()) {
+            isSentinelEnabled = Boolean.parseBoolean(sentinelEnabled);
+        }
 
         if (soTimeoutProp != null && !soTimeoutProp.isEmpty()) {
             try {
@@ -92,6 +104,12 @@ public class RedisServer {
      * @return Jedis instance
      */
     private Jedis createJedis() {
+
+        if (isSentinelEnabled) {
+
+            return createSentinel();
+        }
+        
         String connectionURIProp = (String) messageContext.getProperty(RedisConstants.CONNECTION_URI);
         if (connectionURIProp != null) {
             try {
@@ -138,6 +156,47 @@ public class RedisServer {
             return new Jedis(shardInfo);
         }
         return new Jedis(host, port, connectionTimeout, timeout, useSsl);
+    }
+
+    private Jedis createSentinel() {
+
+        String masterNameProp = (String) messageContext.getProperty(RedisConstants.MASTER_NAME);
+        if (masterNameProp != null && !masterNameProp.isEmpty()) {
+            masterName = masterNameProp;
+        } else{
+            throw new SynapseException("Value for \"masterName\" cannot be empty in sentinel");
+        }
+        
+        String sentinelsProp = (String) messageContext.getProperty(RedisConstants.SENTINELS);
+        if (sentinelsProp != null && !sentinelsProp.isEmpty()) {
+            sentinels = new HashSet<>(Arrays.asList(sentinelsProp.split(",")));
+        } else {
+            throw new SynapseException("Value for \"sentinels\" cannot be empty in sentinel");
+
+        }
+        
+        String masterPasswordProp = (String) messageContext.getProperty(RedisConstants.MASTER_PASSWORD);
+        if (masterPasswordProp != null && !masterPasswordProp.isEmpty()) {
+            masterPassword = masterPasswordProp;
+        }
+        String sentinelPasswordProp = (String) messageContext.getProperty(RedisConstants.SENTINEL_PASSWORD);
+        if (sentinelPasswordProp != null && !sentinelPasswordProp.isEmpty()) {
+            sentinelPassword = sentinelPasswordProp;
+        }
+
+        JedisSentinelPool jedisSentinelPool;
+        
+        if (masterPassword == null) {
+            jedisSentinelPool = new JedisSentinelPool(masterName, sentinels);
+        } else {
+            if (sentinelPassword == null) {
+                jedisSentinelPool = new JedisSentinelPool(masterName, sentinels, masterPassword);
+            } else {
+                jedisSentinelPool = new JedisSentinelPool(masterName, sentinels, masterPassword, sentinelPassword);
+            }
+        }
+        
+        return jedisSentinelPool.getResource();
     }
 
     /**
