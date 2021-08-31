@@ -30,7 +30,7 @@
                 }
             </format>
             <args>
-                <arg evaluator="xml" expression="$ctx:redisResponse"/>
+                <arg evaluator="xml" expression="$ctx:redisResponse" literal="true"/>
             </args>
         </payloadFactory>
     </sequence>
