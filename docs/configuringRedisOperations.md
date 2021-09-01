@@ -48,6 +48,16 @@ If you prefer to use the connectionURI over above configuration, use the followi
 </redis.init>
 ```
 
+**Redis Sentinel**
+```xml
+ <redis.init>
+    <sentinelEnabled>true</sentinelEnabled>
+    <masterName>{$ctx:masterName}</masterName>
+    <sentinels>{$ctx:sentinels}</sentinels>
+    <masterPassword>{$ctx:masterPassword}</masterPassword>
+    <dbNumber>{$ctx:dbNumber}</dbNumber>
+</redis.init>
+```
 **Properties** 
 * redisClusterEnabled: A flag to enable the redis cluster mode (Default is false).
 * clusterNodes: Comma separated list of the cluster nodes as Node1_hostname:Port,Node2_hostname:Port, etc.
@@ -61,7 +71,11 @@ If you prefer to use the connectionURI over above configuration, use the followi
 * maxAttempts: The number of retries.
 * redisConnectionURI: The Redis connection URI in the form of `redis://[user:password@]host[:port]/[database]` or 
   `rediss://[user:password@]host[:port]/[database]` to connect over TLS/SSL
-
+* sentinelEnabled: A flag to enable sentinel
+* masterName: Master name in sentinel mode
+* sentinels: Comma separated list of sentinels
+* masterPassword: Master password (don't specify if there's no password for master)
+* dbNumber: Number of the DB (integer)
 
 Now that you have connected to Redis, use the information in the following topics to perform various operations with the connector:
 

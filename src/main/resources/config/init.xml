@@ -40,7 +40,7 @@
     <parameter name="masterName" description="master name for sentinel"/>
     <parameter name="sentinels" description="comma separated list of sentinels"/>
     <parameter name="masterPassword" description="master password"/>
-    <parameter name="sentinelPassword" description="sentinelPassword"/>
+    <parameter name="dbNumber" description="dbNumber"/>
 
     <sequence>
         <filter xpath="$func:redisPort = '' or  not(string($func:redisPort))">
@@ -139,10 +139,10 @@
                 <property name="masterPassword" expression="$func:masterPassword"/>
             </else>
         </filter>       
-        <filter xpath="$func:sentinelPassword = '' or not(string($func:sentinelPassword))">
+        <filter xpath="$func:dbNumber = '' or not(string($func:dbNumber))">
             <then/>
             <else>
-                <property name="sentinelPassword" expression="$func:sentinelPassword"/>
+                <property name="dbNumber" expression="$func:dbNumber"/>
             </else>
         </filter>
     </sequence>

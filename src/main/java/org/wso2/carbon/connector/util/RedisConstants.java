@@ -75,5 +75,5 @@ public class RedisConstants {
      public static final String MASTER_NAME = "masterName";
      public static final String SENTINELS = "sentinels";
      public static final String MASTER_PASSWORD = "masterPassword";
-     public static final String SENTINEL_PASSWORD ="sentinelPassword";
+     public static final String DB_NUMBER = "dbNumber";
 }

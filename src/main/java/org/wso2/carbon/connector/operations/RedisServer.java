@@ -34,6 +34,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Objects;
 
+import static redis.clients.jedis.Protocol.DEFAULT_DATABASE;
+
 public class RedisServer {
 
     private Jedis jedis;
@@ -49,7 +51,7 @@ public class RedisServer {
     private String masterName;
     private java.util.Set<String> sentinels;
     private String masterPassword;
-    private String sentinelPassword;
+    private int dbNumber = DEFAULT_DATABASE;
 
     public RedisServer(MessageContext messageContext) {
         this.messageContext = messageContext;
@@ -174,29 +176,26 @@ public class RedisServer {
             throw new SynapseException("Value for \"sentinels\" cannot be empty in sentinel");
 
         }
+
+        String dbNumberProp = (String) messageContext.getProperty(RedisConstants.DB_NUMBER);
+        if (dbNumberProp != null && !dbNumberProp.isEmpty()) {
+            try {
+                dbNumber = Integer.parseInt(dbNumberProp);
+            } catch (NumberFormatException e) {
+                throw new SynapseException(
+                        "Invalid input for \"dbNumber\". Cannot parse " + dbNumberProp + " to an Integer.", e);
+            }
+        }
         
         String masterPasswordProp = (String) messageContext.getProperty(RedisConstants.MASTER_PASSWORD);
         if (masterPasswordProp != null && !masterPasswordProp.isEmpty()) {
             masterPassword = masterPasswordProp;
         }
-        String sentinelPasswordProp = (String) messageContext.getProperty(RedisConstants.SENTINEL_PASSWORD);
-        if (sentinelPasswordProp != null && !sentinelPasswordProp.isEmpty()) {
-            sentinelPassword = sentinelPasswordProp;
-        }
 
-        JedisSentinelPool jedisSentinelPool;
-        
-        if (masterPassword == null) {
-            jedisSentinelPool = new JedisSentinelPool(masterName, sentinels);
-        } else {
-            if (sentinelPassword == null) {
-                jedisSentinelPool = new JedisSentinelPool(masterName, sentinels, masterPassword);
-            } else {
-                jedisSentinelPool = new JedisSentinelPool(masterName, sentinels, masterPassword, sentinelPassword);
-            }
+        try (JedisSentinelPool jedisSentinelPool = new JedisSentinelPool(masterName, sentinels,
+                new GenericObjectPoolConfig(), connectionTimeout, timeout, masterPassword, dbNumber)) {
+            return jedisSentinelPool.getResource();
         }
-        
-        return jedisSentinelPool.getResource();
     }
 
     /**
