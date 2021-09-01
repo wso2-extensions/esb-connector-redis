@@ -25,12 +25,16 @@ import org.wso2.carbon.connector.util.RedisConstants;
 import redis.clients.jedis.HostAndPort;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisCluster;
+import redis.clients.jedis.JedisSentinelPool;
 import redis.clients.jedis.JedisShardInfo;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Objects;
+
+import static redis.clients.jedis.Protocol.DEFAULT_DATABASE;
 
 public class RedisServer {
 
@@ -43,6 +47,11 @@ public class RedisServer {
     private int connectionTimeout;
     private boolean useSsl = false;
     private String cacheKey = null;
+    private boolean isSentinelEnabled = false;
+    private String masterName;
+    private java.util.Set<String> sentinels;
+    private String masterPassword;
+    private int dbNumber = DEFAULT_DATABASE;
 
     public RedisServer(MessageContext messageContext) {
         this.messageContext = messageContext;
@@ -55,6 +64,11 @@ public class RedisServer {
         String connectionTimeoutProp = (String) messageContext.getProperty(RedisConstants.CONNECTION_TIMEOUT);
         String cacheKeyProp = (String) messageContext.getProperty(RedisConstants.CACHEKEY);
         String sslProp = (String) messageContext.getProperty(RedisConstants.USESSL);
+
+        String sentinelEnabled = (String) messageContext.getProperty(RedisConstants.SENTINEL_ENABLED);
+        if (sentinelEnabled != null && !sentinelEnabled.isEmpty()) {
+            isSentinelEnabled = Boolean.parseBoolean(sentinelEnabled);
+        }
 
         if (soTimeoutProp != null && !soTimeoutProp.isEmpty()) {
             try {
@@ -92,6 +106,12 @@ public class RedisServer {
      * @return Jedis instance
      */
     private Jedis createJedis() {
+
+        if (isSentinelEnabled) {
+
+            return createSentinel();
+        }
+        
         String connectionURIProp = (String) messageContext.getProperty(RedisConstants.CONNECTION_URI);
         if (connectionURIProp != null) {
             try {
@@ -138,6 +158,44 @@ public class RedisServer {
             return new Jedis(shardInfo);
         }
         return new Jedis(host, port, connectionTimeout, timeout, useSsl);
+    }
+
+    private Jedis createSentinel() {
+
+        String masterNameProp = (String) messageContext.getProperty(RedisConstants.MASTER_NAME);
+        if (masterNameProp != null && !masterNameProp.isEmpty()) {
+            masterName = masterNameProp;
+        } else{
+            throw new SynapseException("Value for \"masterName\" cannot be empty in sentinel");
+        }
+        
+        String sentinelsProp = (String) messageContext.getProperty(RedisConstants.SENTINELS);
+        if (sentinelsProp != null && !sentinelsProp.isEmpty()) {
+            sentinels = new HashSet<>(Arrays.asList(sentinelsProp.split(",")));
+        } else {
+            throw new SynapseException("Value for \"sentinels\" cannot be empty in sentinel");
+
+        }
+
+        String dbNumberProp = (String) messageContext.getProperty(RedisConstants.DB_NUMBER);
+        if (dbNumberProp != null && !dbNumberProp.isEmpty()) {
+            try {
+                dbNumber = Integer.parseInt(dbNumberProp);
+            } catch (NumberFormatException e) {
+                throw new SynapseException(
+                        "Invalid input for \"dbNumber\". Cannot parse " + dbNumberProp + " to an Integer.", e);
+            }
+        }
+        
+        String masterPasswordProp = (String) messageContext.getProperty(RedisConstants.MASTER_PASSWORD);
+        if (masterPasswordProp != null && !masterPasswordProp.isEmpty()) {
+            masterPassword = masterPasswordProp;
+        }
+
+        try (JedisSentinelPool jedisSentinelPool = new JedisSentinelPool(masterName, sentinels,
+                new GenericObjectPoolConfig(), connectionTimeout, timeout, masterPassword, dbNumber)) {
+            return jedisSentinelPool.getResource();
+        }
     }
 
     /**

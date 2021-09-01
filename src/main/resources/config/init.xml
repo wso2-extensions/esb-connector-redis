@@ -34,6 +34,13 @@
     <parameter name="clusterNodes" description="comma separated list of the cluster nodes (host:port)"/>
     <parameter name="clientName" description="name of the client"/>
     <parameter name="maxAttempts" description="the number of retries"/>
+    
+    <!-- Redis Sentinel specific parameters-->
+    <parameter name="sentinelEnabled" description="a flag to enable redis sentinel"/>
+    <parameter name="masterName" description="master name for sentinel"/>
+    <parameter name="sentinels" description="comma separated list of sentinels"/>
+    <parameter name="masterPassword" description="master password"/>
+    <parameter name="dbNumber" description="dbNumber"/>
 
     <sequence>
         <filter xpath="$func:redisPort = '' or  not(string($func:redisPort))">
@@ -106,6 +113,36 @@
             <then/>
             <else>
                 <property name="redisConnectionURI" expression="$func:redisConnectionURI"/>
+            </else>
+        </filter>        
+        <filter xpath="$func:sentinelEnabled = '' or not(string($func:sentinelEnabled))">
+            <then/>
+            <else>
+                <property name="sentinelEnabled" expression="$func:sentinelEnabled"/>
+            </else>
+        </filter>        
+        <filter xpath="$func:masterName = '' or not(string($func:masterName))">
+            <then/>
+            <else>
+                <property name="masterName" expression="$func:masterName"/>
+            </else>
+        </filter>        
+        <filter xpath="$func:sentinels = '' or not(string($func:sentinels))">
+            <then/>
+            <else>
+                <property name="sentinels" expression="$func:sentinels"/>
+            </else>
+        </filter>        
+        <filter xpath="$func:masterPassword = '' or not(string($func:masterPassword))">
+            <then/>
+            <else>
+                <property name="masterPassword" expression="$func:masterPassword"/>
+            </else>
+        </filter>       
+        <filter xpath="$func:dbNumber = '' or not(string($func:dbNumber))">
+            <then/>
+            <else>
+                <property name="dbNumber" expression="$func:dbNumber"/>
             </else>
         </filter>
     </sequence>
