@@ -66,9 +66,11 @@ public class RedisConstants {
     public static final String CLIENT_NAME = "clientName";
     public static final String MAX_ATTEMPTS = "maxAttempts";
     public static final String WEIGHT = "weight";
+    public static final String MAX_CONNECTIONS = "maxConnections";
 
     public static final int DEFAULT_TIMEOUT = 2000;
     public static final int DEFAULT_MAX_ATTEMPTS = 5;
+    public static final int DEFAULT_MAX_CONNECTIONS = 8;
     public static final int DEFAULT_WEIGHT = 1;
     
      public static final String SENTINEL_ENABLED = "sentinelEnabled";
