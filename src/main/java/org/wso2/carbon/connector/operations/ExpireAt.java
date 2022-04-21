@@ -37,7 +37,15 @@ public class ExpireAt extends AbstractConnector {
             if (serverObj.isClusterEnabled()) {
                 response = serverObj.getJedisCluster().expireAt(key, unixTime);
             } else {
-                response = serverObj.getJedis().expireAt(key, unixTime);
+                Jedis jedis = null;
+                try {
+                    jedis = serverObj.getJedis();
+                    response = jedis.expireAt(key, unixTime);
+                } finally {
+                    if (jedis != null) {
+                        jedis.close();
+                    }
+                }
             }
 
             if (response != null) {
