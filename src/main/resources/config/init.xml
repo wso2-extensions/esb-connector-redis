@@ -24,6 +24,7 @@
     <parameter name="useSsl" description="a flag to switch between SSL and non-SSL"/>
     <parameter name="maxConnections"
                description="The maximum number of connections that are supported by the jedis pool"/>
+    <parameter name="redisConnectionPoolId" description="the connection pool id for create unique pool"/>
 
     <!-- standalone mode specific parameters-->
     <parameter name="redisHost" description="the server host"/>
@@ -49,6 +50,12 @@
             <then/>
             <else>
                 <property name="redisPort" expression="$func:redisPort"/>
+            </else>
+        </filter>
+        <filter xpath="$func:redisConnectionPoolId = '' or  not(string($func:redisConnectionPoolId))">
+            <then/>
+            <else>
+                <property name="redisConnectionPoolId" expression="$func:redisConnectionPoolId"/>
             </else>
         </filter>
         <filter xpath="$func:redisTimeout = '' or  not(string($func:redisTimeout))">

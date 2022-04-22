@@ -35,6 +35,7 @@ import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -42,8 +43,8 @@ import static redis.clients.jedis.Protocol.DEFAULT_DATABASE;
 
 public class RedisServer {
 
-    private static JedisPool jedisPool = null;
-    private static JedisSentinelPool jedisSentinelPool = null;
+    private static ConcurrentHashMap<String, JedisPool> jedisPoolMap = new ConcurrentHashMap<>();
+    private static ConcurrentHashMap<String, JedisSentinelPool> jedisSentinelPoolMap = new ConcurrentHashMap<>();
     private int maxConnections;
     private JedisCluster jedisCluster;
 
@@ -53,6 +54,7 @@ public class RedisServer {
     private int connectionTimeout;
     private boolean useSsl = false;
     private String cacheKey = null;
+    private String uniquePoolId = null;
     private boolean isSentinelEnabled = false;
     private String masterName;
     private java.util.Set<String> sentinels;
@@ -75,6 +77,23 @@ public class RedisServer {
 
         String sentinelEnabled = (String) messageContext.getProperty(RedisConstants.SENTINEL_ENABLED);
         String maxConnectionsProp = (String) messageContext.getProperty(RedisConstants.MAX_CONNECTIONS);
+        String poolIdProp = (String) messageContext.getProperty(RedisConstants.CONNECTION_POOL_ID);
+        String artifactNameProp = (String) messageContext.getProperty(RedisConstants.ARTIFACT_NAME);
+
+        if (poolIdProp != null && !poolIdProp.isEmpty()) {
+            if (artifactNameProp != null) {
+                uniquePoolId = artifactNameProp + RedisConstants.INTERNAL_POOL_ID_SEPARATOR + poolIdProp;
+            } else {
+                uniquePoolId = RedisConstants.INTERNAL_POOL_ID_SEPARATOR + poolIdProp;
+            }
+        } else {
+            if (artifactNameProp != null) {
+                uniquePoolId = artifactNameProp + RedisConstants.INTERNAL_POOL_ID_SEPARATOR
+                        + RedisConstants.DEFAULT_CONNECTION_POOL_ID;
+            } else {
+                uniquePoolId = RedisConstants.INTERNAL_POOL_ID_SEPARATOR + RedisConstants.DEFAULT_CONNECTION_POOL_ID;
+            }
+        }
 
         if (maxConnectionsProp != null && !maxConnectionsProp.isEmpty()) {
             try {
@@ -123,7 +142,7 @@ public class RedisServer {
         }
     }
 
-    private void buildJedisPool(String host, int port, int connectionTimeout, int soTimeout,
+    private JedisPool buildJedisPool(String host, int port, int connectionTimeout, int soTimeout,
                                 boolean ssl) {
         final JedisPoolConfig poolConfig = new JedisPoolConfig();
         poolConfig.setMaxTotal(maxConnections); //The maximum number of connections that are supported by the pool.
@@ -134,8 +153,10 @@ public class RedisServer {
         poolConfig.setTestWhileIdle(true);
         poolConfig.setNumTestsPerEvictionRun(3);
         poolConfig.setBlockWhenExhausted(true);
-        jedisPool = new JedisPool(poolConfig, host, port, connectionTimeout, soTimeout, null, dbNumber,
-                null, ssl);
+        JedisPool jedisPool = new JedisPool(poolConfig, host, port, connectionTimeout, soTimeout, null,
+                dbNumber, null, ssl);
+        jedisPoolMap.put(uniquePoolId, jedisPool);
+        return jedisPool;
     }
 
     /**
@@ -195,17 +216,17 @@ public class RedisServer {
             return new Jedis(shardInfo);
         }
         //Use double lock to avoid creating a new Jedis Sentinel connection pool for each request.
-        if (jedisPool == null) {
+        if (jedisPoolMap.get(uniquePoolId) == null) {
             jedisLock.lock();
             try {
-                if (jedisPool == null) {
+                if (jedisPoolMap.get(uniquePoolId) == null) {
                     buildJedisPool(host, port, connectionTimeout, soTimeout, useSsl);
                 }
             } finally {
                 jedisLock.unlock();
             }
         }
-        return jedisPool.getResource();
+        return jedisPoolMap.get(uniquePoolId).getResource();
     }
 
     private Jedis createSentinel() {
@@ -240,21 +261,21 @@ public class RedisServer {
             masterPassword = masterPasswordProp;
         }
         //Use double lock to avoid creating a new Jedis Sentinel connection pool for each request.
-        if (jedisSentinelPool == null) {
+        if (jedisSentinelPoolMap.get(uniquePoolId) == null) {
             lock.lock();
             try {
-                if (jedisSentinelPool == null) {
+                if (jedisSentinelPoolMap.get(uniquePoolId) == null) {
                     GenericObjectPoolConfig config = new GenericObjectPoolConfig();
                     config.setMaxTotal(maxConnections);
                     config.setMaxIdle(maxConnections);
-                    jedisSentinelPool = new JedisSentinelPool(masterName, sentinels, config, connectionTimeout,
-                            soTimeout, masterPassword, dbNumber);
+                    jedisSentinelPoolMap.put(uniquePoolId, new JedisSentinelPool(masterName, sentinels, config,
+                            connectionTimeout, soTimeout, masterPassword, dbNumber));
                 }
             } finally {
                 lock.unlock();
             }
         }
-        return jedisSentinelPool.getResource();
+        return jedisSentinelPoolMap.get(uniquePoolId).getResource();
     }
 
     /**
