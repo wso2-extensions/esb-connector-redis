@@ -22,6 +22,7 @@ import org.apache.synapse.MessageContext;
 import org.wso2.carbon.connector.core.AbstractConnector;
 import org.wso2.carbon.connector.core.ConnectException;
 import org.wso2.carbon.connector.util.RedisConstants;
+import redis.clients.jedis.Jedis;
 
 import java.util.Set;
 
@@ -40,7 +41,15 @@ public class ZRevRange extends AbstractConnector {
             if (serverObj.isClusterEnabled()) {
                 response = serverObj.getJedisCluster().zrevrange(key, start, end);
             } else {
-                response = serverObj.getJedis().zrevrange(key, start, end);
+                Jedis jedis = null;
+                try {
+                    jedis = serverObj.getJedis();
+                    response = jedis.zrevrange(key, start, end);
+                } finally {
+                    if (jedis != null) {
+                        jedis.close();
+                    }
+                }
             }
             if (response != null) {
                 messageContext.setProperty(RedisConstants.RESULT, response.toString());

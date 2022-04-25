@@ -22,6 +22,7 @@ import org.apache.synapse.MessageContext;
 import org.wso2.carbon.connector.core.AbstractConnector;
 import org.wso2.carbon.connector.core.ConnectException;
 import org.wso2.carbon.connector.util.RedisConstants;
+import redis.clients.jedis.Jedis;
 
 public class Echo extends AbstractConnector {
 
@@ -36,7 +37,15 @@ public class Echo extends AbstractConnector {
             if (serverObj.isClusterEnabled()) {
                 response = serverObj.getJedisCluster().echo(key);
             } else {
-                response = serverObj.getJedis().echo(key);
+                Jedis jedis = null;
+                try {
+                    jedis = serverObj.getJedis();
+                    response = jedis.echo(key);
+                } finally {
+                    if (jedis != null) {
+                        jedis.close();
+                    }
+                }
             }
             if (response != null) {
                 messageContext.setProperty(RedisConstants.RESULT, response);

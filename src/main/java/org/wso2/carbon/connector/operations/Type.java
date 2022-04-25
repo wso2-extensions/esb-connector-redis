@@ -37,7 +37,16 @@ public class Type extends AbstractConnector {
             if (serverObj.isClusterEnabled()) {
                 response = serverObj.getJedisCluster().type(key);
             } else {
-                response = serverObj.getJedis().type(key);
+                Jedis jedis = null;
+                try {
+                    jedis = serverObj.getJedis();
+                    response = jedis.type(key);
+                } finally {
+                    if (jedis != null) {
+                        jedis.close();
+                    }
+                }
+
             }
             if (response != null) {
                 messageContext.setProperty(RedisConstants.RESULT, response);

@@ -22,6 +22,7 @@ import org.apache.synapse.MessageContext;
 import org.wso2.carbon.connector.core.AbstractConnector;
 import org.wso2.carbon.connector.core.ConnectException;
 import org.wso2.carbon.connector.util.RedisConstants;
+import redis.clients.jedis.Jedis;
 
 import java.util.List;
 
@@ -40,7 +41,15 @@ public class BrPop extends AbstractConnector {
             if (serverObj.isClusterEnabled()) {
                 response = serverObj.getJedisCluster().brpop(brpopTimeout, keyValue);
             } else {
-                response = serverObj.getJedis().brpop(brpopTimeout, keyValue);
+                Jedis jedis = null;
+                try {
+                    jedis = serverObj.getJedis();
+                    response = jedis.brpop(brpopTimeout, keyValue);
+                } finally {
+                    if (jedis != null) {
+                        jedis.close();
+                    }
+                }
             }
 
             if (response != null) {

@@ -22,6 +22,7 @@ import org.apache.synapse.MessageContext;
 import org.wso2.carbon.connector.core.AbstractConnector;
 import org.wso2.carbon.connector.core.ConnectException;
 import org.wso2.carbon.connector.util.RedisConstants;
+import redis.clients.jedis.Jedis;
 
 public class Ping extends AbstractConnector {
 
@@ -35,7 +36,15 @@ public class Ping extends AbstractConnector {
             if (serverObj.isClusterEnabled()) {
                 handleException("Unsupported operation \"ping()\" in Redis Cluster", messageContext);
             } else {
-                response = serverObj.getJedis().ping();
+                Jedis jedis = null;
+                try {
+                    jedis = serverObj.getJedis();
+                    response = jedis.ping();
+                } finally {
+                    if (jedis != null) {
+                        jedis.close();
+                    }
+                }
             }
 
             if (response != null) {
