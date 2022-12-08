@@ -18,6 +18,7 @@
 
 package org.wso2.carbon.connector.operations;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.SynapseException;
@@ -29,6 +30,7 @@ import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.JedisSentinelPool;
 import redis.clients.jedis.JedisShardInfo;
+import redis.clients.jedis.Protocol;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -260,6 +262,35 @@ public class RedisServer {
         if (masterPasswordProp != null && !masterPasswordProp.isEmpty()) {
             masterPassword = masterPasswordProp;
         }
+
+        String masterUser = (String) messageContext.getProperty(RedisConstants.REDIS_MASTER_USER);
+        String sentinelUser = (String) messageContext.getProperty(RedisConstants.SENTINEL_USER);
+        String sentinelPassword = (String) messageContext.getProperty(RedisConstants.SENTINEL_PASSWORD);
+        String sentinelClientName = (String) messageContext.getProperty(RedisConstants.SENTINEL_CLIENT_NAME);
+        String clientName = (String) messageContext.getProperty(RedisConstants.CLIENT_NAME);
+        String sentinelConnTimeoutProp = (String) messageContext.getProperty(RedisConstants.SENTINEL_CONNECTION_TIMEOUT);
+        int sentinelConnectionTimeout = Protocol.DEFAULT_TIMEOUT;
+        if (!StringUtils.isEmpty(sentinelConnTimeoutProp)) {
+            try {
+                sentinelConnectionTimeout = Integer.parseInt(sentinelConnTimeoutProp);
+            } catch (NumberFormatException e) {
+                throw new SynapseException(
+                        "Invalid input for \"" + RedisConstants.SENTINEL_CONNECTION_TIMEOUT + "\". Cannot parse "
+                                + sentinelConnTimeoutProp + " to an Integer.", e);
+            }
+        }
+        String sentinelSoTimeoutProp = (String) messageContext.getProperty(RedisConstants.SENTINEL_SO_TIMEOUT);
+        int sentinelSoTimeout = Protocol.DEFAULT_TIMEOUT;
+        if (!StringUtils.isEmpty(sentinelConnTimeoutProp)) {
+            try {
+                sentinelSoTimeout = Integer.parseInt(sentinelConnTimeoutProp);
+            } catch (NumberFormatException e) {
+                throw new SynapseException(
+                        "Invalid input for \"" + RedisConstants.SENTINEL_SO_TIMEOUT + "\". Cannot parse "
+                                + sentinelSoTimeoutProp + " to an Integer.", e);
+            }
+        }
+
         //Use double lock to avoid creating a new Jedis Sentinel connection pool for each request.
         if (jedisSentinelPoolMap.get(uniquePoolId) == null) {
             lock.lock();
@@ -268,8 +299,11 @@ public class RedisServer {
                     GenericObjectPoolConfig config = new GenericObjectPoolConfig();
                     config.setMaxTotal(maxConnections);
                     config.setMaxIdle(maxConnections);
-                    jedisSentinelPoolMap.put(uniquePoolId, new JedisSentinelPool(masterName, sentinels, config,
-                            connectionTimeout, soTimeout, masterPassword, dbNumber));
+                    JedisSentinelPool jedisSentinelPool = new JedisSentinelPool(masterName, sentinels, config,
+                            connectionTimeout, soTimeout, masterUser, masterPassword, dbNumber, clientName,
+                            sentinelConnectionTimeout, sentinelSoTimeout, sentinelUser, sentinelPassword,
+                            sentinelClientName);
+                    jedisSentinelPoolMap.put(uniquePoolId, jedisSentinelPool);
                 }
             } finally {
                 lock.unlock();
