@@ -59,6 +59,12 @@ public class RedisConstants {
     public static final String MESSAGE = "redisMessage";
     public static final String CACHEKEY = "cacheKey";
     public static final String CACHEHOSTNAME = "cacheHostname";
+    public static final String SENTINEL_USER = "sentinelUser";
+    public static final String SENTINEL_CLIENT_NAME = "sentinelClientName";
+    public static final String SENTINEL_PASSWORD = "sentinelPassword";
+    public static final String SENTINEL_CONNECTION_TIMEOUT = "sentinelConnectionTimeout";
+    public static final String SENTINEL_SO_TIMEOUT = "sentinelSoTimeout";
+    public static final String REDIS_MASTER_USER = "masterUser";
     public static final String USESSL = "useSsl";
     public static final String CONNECTION_TIMEOUT = "redisConnectionTimeout";
     public static final String REDIS_CLUSTER_ENABLED = "redisClusterEnabled";

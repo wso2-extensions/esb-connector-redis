@@ -39,6 +39,12 @@
     <parameter name="maxAttempts" description="the number of retries"/>
     
     <!-- Redis Sentinel specific parameters-->
+    <parameter name="sentinelPassword" description="sentinel password"/>
+    <parameter name="sentinelUser" description="sentinel user name"/>
+    <parameter name="sentinelClientName" description="sentinel client name"/>
+    <parameter name="masterUser" description="master user name"/>
+    <parameter name="sentinelConnectionTimeout" description="connection timeout for sentinel"/>
+    <parameter name="sentinelSoTimeout" description="socket timeout for sentinel"/>
     <parameter name="sentinelEnabled" description="a flag to enable redis sentinel"/>
     <parameter name="masterName" description="master name for sentinel"/>
     <parameter name="sentinels" description="comma separated list of sentinels"/>
@@ -135,7 +141,43 @@
             <else>
                 <property name="sentinelEnabled" expression="$func:sentinelEnabled"/>
             </else>
-        </filter>        
+        </filter>
+        <filter xpath="$func:sentinelPassword = '' or not(string($func:sentinelPassword))">
+            <then/>
+            <else>
+                <property name="sentinelPassword" expression="$func:sentinelPassword"/>
+            </else>
+        </filter>
+        <filter xpath="$func:sentinelUser = '' or not(string($func:sentinelUser))">
+            <then/>
+            <else>
+                <property name="sentinelUser" expression="$func:sentinelUser"/>
+            </else>
+        </filter>
+        <filter xpath="$func:sentinelClientName = '' or not(string($func:sentinelClientName))">
+            <then/>
+            <else>
+                <property name="sentinelClientName" expression="$func:sentinelClientName"/>
+            </else>
+        </filter>
+        <filter xpath="$func:masterUser = '' or not(string($func:masterUser))">
+            <then/>
+            <else>
+                <property name="masterUser" expression="$func:masterUser"/>
+            </else>
+        </filter>
+        <filter xpath="$func:sentinelConnectionTimeout = '' or not(string($func:sentinelConnectionTimeout))">
+            <then/>
+            <else>
+                <property name="sentinelConnectionTimeout" expression="$func:sentinelConnectionTimeout"/>
+            </else>
+        </filter>
+        <filter xpath="$func:sentinelSoTimeout = '' or not(string($func:sentinelSoTimeout))">
+            <then/>
+            <else>
+                <property name="sentinelSoTimeout" expression="$func:sentinelSoTimeout"/>
+            </else>
+        </filter>
         <filter xpath="$func:masterName = '' or not(string($func:masterName))">
             <then/>
             <else>
