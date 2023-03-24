@@ -31,6 +31,10 @@
             <file>get.xml</file>
             <description>get the value of a key</description>
         </component>
+        <component name="getObjectIdleTime">
+            <file>getObjectIdleTime.xml</file>
+            <description>get the OBJECT IDLE TIME</description>
+        </component>
         <component name="getRange">
             <file>getRange.xml</file>
             <description>get the sub string of the key</description>

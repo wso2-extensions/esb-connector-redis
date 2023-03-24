@@ -24,6 +24,7 @@ public class RedisConstants {
     public static final String HOST = "redisHost";
     public static final String CONNECTION_URI = "redisConnectionURI";
     public static final String RESULT = "result";
+    public static final String RESULT_OF_IDLE = "result_of_idle";
     public static final String KEY = "redisKey";
     public static final String VALUE = "redisValue";
     public static final String PATTERN = "redisPattern";
