@@ -74,6 +74,7 @@ public class RedisConstants {
     public static final String MAX_ATTEMPTS = "maxAttempts";
     public static final String WEIGHT = "weight";
     public static final String MAX_CONNECTIONS = "maxConnections";
+    public static final String IS_JMX_ENABLED = "jmxEnabled";
     public static final String CONNECTION_POOL_ID = "redisConnectionPoolId";
     public static final String INTERNAL_POOL_ID_SEPARATOR = "INTERNAL_POOL_ID_";
     public static final String ARTIFACT_NAME = "ARTIFACT_NAME";

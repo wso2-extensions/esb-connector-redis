@@ -46,12 +46,13 @@ import static redis.clients.jedis.Protocol.DEFAULT_DATABASE;
 public class RedisServer {
 
     private static ConcurrentHashMap<String, JedisPool> jedisPoolMap = new ConcurrentHashMap<>();
+    private static ConcurrentHashMap<String, JedisCluster> jedisClusterMap = new ConcurrentHashMap<>();
     private static ConcurrentHashMap<String, JedisSentinelPool> jedisSentinelPoolMap = new ConcurrentHashMap<>();
     private int maxConnections;
-    private JedisCluster jedisCluster;
 
     private MessageContext messageContext;
     private Boolean isClusterEnabled = false;
+    private Boolean isJmxEnabled = false;
     private int soTimeout = RedisConstants.DEFAULT_TIMEOUT;
     private int connectionTimeout;
     private boolean useSsl = false;
@@ -64,6 +65,7 @@ public class RedisServer {
     private int dbNumber = DEFAULT_DATABASE;
     private Lock lock = new ReentrantLock();
     private Lock jedisLock = new ReentrantLock();
+    private Lock jedisClusterLock = new ReentrantLock();
 
     public RedisServer(MessageContext messageContext) {
         this.messageContext = messageContext;
@@ -71,6 +73,10 @@ public class RedisServer {
         String redisClusterEnabled = (String) messageContext.getProperty(RedisConstants.REDIS_CLUSTER_ENABLED);
         if (redisClusterEnabled != null && !redisClusterEnabled.isEmpty()) {
             isClusterEnabled = Boolean.parseBoolean(redisClusterEnabled);
+        }
+        String isJmxEnabled = (String) messageContext.getProperty(RedisConstants.IS_JMX_ENABLED);
+        if (isJmxEnabled != null && !isJmxEnabled.isEmpty()) {
+            this.isJmxEnabled = Boolean.parseBoolean(isJmxEnabled);
         }
         String soTimeoutProp = (String) messageContext.getProperty(RedisConstants.TIMEOUT);
         String connectionTimeoutProp = (String) messageContext.getProperty(RedisConstants.CONNECTION_TIMEOUT);
@@ -352,9 +358,31 @@ public class RedisServer {
             jedisClusterNodes.add(new HostAndPort(redisNode[0].trim(), Integer.parseInt(redisNode[1].trim())));
         }
 
-        return new JedisCluster(jedisClusterNodes, connectionTimeout, soTimeout, maxAttempts,
-                                cacheKey, clientName, new GenericObjectPoolConfig(),
-                                useSsl);
+        GenericObjectPoolConfig jedisPoolConfig = new GenericObjectPoolConfig<>();
+        jedisPoolConfig.setJmxEnabled(isJmxEnabled);
+        jedisPoolConfig.setMaxTotal(maxConnections); //The maximum number of connections that are supported by the pool.
+        jedisPoolConfig.setMaxIdle(maxConnections); // Is the actual maximum number of connections required by workloads
+        // (maxTotal = maxIdle)
+        jedisPoolConfig.setTestOnBorrow(false); //set to default false
+        jedisPoolConfig.setTestOnReturn(false); //set to default false
+        jedisPoolConfig.setTestWhileIdle(true);
+        jedisPoolConfig.setNumTestsPerEvictionRun(3);
+        jedisPoolConfig.setBlockWhenExhausted(true);
+
+        //Use double lock to avoid creating a new Jedis Cluster Connection Pool for each request.
+        if (jedisClusterMap.get(uniquePoolId) == null) {
+            jedisClusterLock.lock();
+            try {
+                if (jedisClusterMap.get(uniquePoolId) == null) {
+                    JedisCluster jedisCluster = new JedisCluster(jedisClusterNodes, connectionTimeout, soTimeout, maxAttempts,
+                            cacheKey, clientName, jedisPoolConfig, useSsl);
+                    jedisClusterMap.put(uniquePoolId, jedisCluster);
+                }
+            } finally {
+                jedisClusterLock.unlock();
+            }
+        }
+        return jedisClusterMap.get(uniquePoolId);
     }
 
     public Jedis getJedis() {
@@ -362,17 +390,14 @@ public class RedisServer {
     }
 
     public JedisCluster getJedisCluster() {
-        this.jedisCluster = createJedisCluster();
-        return jedisCluster;
+        return createJedisCluster();
     }
 
     /**
-     * Close the datasources objects associated Jedis and JedisCluster instances.
+     * Close the datasources objects associated with JedisCluster instances.
      */
     public void close() {
-        if (jedisCluster != null) {
-            jedisCluster.close();
-        }
+        //No need to close the JedisCluster instance as it is handled by the JedisClusterConnectionPool.
     }
 
     public Boolean isClusterEnabled() {
