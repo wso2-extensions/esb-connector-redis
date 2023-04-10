@@ -37,7 +37,8 @@
     <parameter name="clusterNodes" description="comma separated list of the cluster nodes (host:port)"/>
     <parameter name="clientName" description="name of the client"/>
     <parameter name="maxAttempts" description="the number of retries"/>
-    
+    <parameter name="jmxEnabled" description="a flag to enable jmx"/>
+
     <!-- Redis Sentinel specific parameters-->
     <parameter name="sentinelPassword" description="sentinel password"/>
     <parameter name="sentinelUser" description="sentinel user name"/>
@@ -98,6 +99,12 @@
             <then/>
             <else>
                 <property name="redisClusterEnabled" expression="$func:redisClusterEnabled"/>
+            </else>
+        </filter>
+        <filter xpath="$func:jmxEnabled = '' or  not(string($func:jmxEnabled))">
+            <then/>
+            <else>
+                <property name="jmxEnabled" expression="$func:jmxEnabled"/>
             </else>
         </filter>
         <filter xpath="$func:clusterNodes = '' or  not(string($func:clusterNodes))">
