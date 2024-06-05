@@ -1,0 +1,50 @@
+{
+  "connectorName": "redis",
+  "operationName": "hLen",
+  "title": "Operation hLen in redis",
+  "help": "<h1>HLen operation in redis</h1>",
+  "elements": [
+    {
+      "type": "attributeGroup",
+      "value": {
+        "groupName": "General",
+        "elements": [
+          {
+            "type": "attribute",
+            "value": {
+              "name": "configRef",
+              "displayName": "Redis Connection",
+              "inputType": "connection",
+              "allowedConnectionTypes": [
+                "REDIS"
+              ],
+              "defaultType": "connection.local",
+              "defaultValue": "",
+              "required": "true",
+              "helpTip": "File connection to be used"
+            }
+          },
+          {
+            "type": "attributeGroup",
+            "value": {
+              "groupName": "Basic",
+              "elements": [
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "redisKey",
+                    "displayName": "redisKey",
+                    "inputType": "stringOrExpression",
+                    "defaultValue": "",
+                    "required": "true",
+                    "helpTip": "Redis Key"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

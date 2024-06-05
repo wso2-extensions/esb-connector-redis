@@ -30,16 +30,16 @@ public class Type extends AbstractConnector {
     public void connect(MessageContext messageContext) throws ConnectException {
         RedisServer serverObj = null;
         try {
-            serverObj = new RedisServer(messageContext);
+            serverObj = RedisConfig.getRedisServerInstance(messageContext);
             String key = messageContext.getProperty(RedisConstants.KEY).toString();
             String response;
 
             if (serverObj.isClusterEnabled()) {
-                response = serverObj.getJedisCluster().type(key);
+                response = serverObj.getJedisCluster(messageContext).type(key);
             } else {
                 Jedis jedis = null;
                 try {
-                    jedis = serverObj.getJedis();
+                    jedis = serverObj.getJedis(messageContext);
                     response = jedis.type(key);
                 } finally {
                     if (jedis != null) {

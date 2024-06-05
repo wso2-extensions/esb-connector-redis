@@ -34,13 +34,13 @@ public class Del extends AbstractConnector {
             String[] keyValue = key.split(" ");
             Long response;
 
-            serverObj = new RedisServer(messageContext);
+            serverObj = RedisConfig.getRedisServerInstance(messageContext);
             if (serverObj.isClusterEnabled()) {
-                response = serverObj.getJedisCluster().del(keyValue);
+                response = serverObj.getJedisCluster(messageContext).del(keyValue);
             } else {
                 Jedis jedis = null;
                 try {
-                    jedis = serverObj.getJedis();
+                    jedis = serverObj.getJedis(messageContext);
                     response = jedis.del(keyValue);
                 } finally {
                     if (jedis != null) {

@@ -30,18 +30,18 @@ public class LRem extends AbstractConnector {
     public void connect(MessageContext messageContext) throws ConnectException {
         RedisServer serverObj = null;
         try {
-            serverObj = new RedisServer(messageContext);
+            serverObj = RedisConfig.getRedisServerInstance(messageContext);
             String key = messageContext.getProperty(RedisConstants.KEY).toString();
             long count = Long.parseLong(messageContext.getProperty(RedisConstants.COUNT).toString());
             String value = messageContext.getProperty(RedisConstants.VALUE).toString();
             Long response;
 
             if (serverObj.isClusterEnabled()) {
-                response = serverObj.getJedisCluster().lrem(key, count, value);
+                response = serverObj.getJedisCluster(messageContext).lrem(key, count, value);
             } else {
                 Jedis jedis = null;
                 try {
-                    jedis = serverObj.getJedis();
+                    jedis = serverObj.getJedis(messageContext);
                     response = jedis.lrem(key, count, value);
                 } finally {
                     if (jedis != null) {

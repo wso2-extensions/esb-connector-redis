@@ -1,0 +1,50 @@
+{
+  "connectorName": "redis",
+  "operationName": "mSetnX",
+  "title": "Operation mSetnX in redis",
+  "help": "<h1>MSetnX operation in redis</h1>",
+  "elements": [
+    {
+      "type": "attributeGroup",
+      "value": {
+        "groupName": "General",
+        "elements": [
+          {
+            "type": "attribute",
+            "value": {
+              "name": "configRef",
+              "displayName": "Redis Connection",
+              "inputType": "connection",
+              "allowedConnectionTypes": [
+                "REDIS"
+              ],
+              "defaultType": "connection.local",
+              "defaultValue": "",
+              "required": "true",
+              "helpTip": "File connection to be used"
+            }
+          },
+          {
+            "type": "attributeGroup",
+            "value": {
+              "groupName": "Basic",
+              "elements": [
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "redisKeysValues",
+                    "displayName": "redisKeysValues",
+                    "inputType": "stringOrExpression",
+                    "defaultValue": "",
+                    "required": "true",
+                    "helpTip": "Redis Keys Values"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

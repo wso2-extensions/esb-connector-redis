@@ -30,18 +30,18 @@ public class ZUnionStore extends AbstractConnector {
     public void connect(MessageContext messageContext) throws ConnectException {
         RedisServer serverObj = null;
         try {
-            serverObj = new RedisServer(messageContext);
+            serverObj = RedisConfig.getRedisServerInstance(messageContext);
             String dstKey = messageContext.getProperty(RedisConstants.DSTKEY).toString();
             String sets = messageContext.getProperty(RedisConstants.SETS).toString();
             String[] keyValue = sets.split(" ");
             Long response;
 
             if (serverObj.isClusterEnabled()) {
-                response = serverObj.getJedisCluster().zunionstore(dstKey, keyValue);
+                response = serverObj.getJedisCluster(messageContext).zunionstore(dstKey, keyValue);
             } else {
                 Jedis jedis = null;
                 try {
-                    jedis = serverObj.getJedis();
+                    jedis = serverObj.getJedis(messageContext);
                     response = jedis.zunionstore(dstKey, keyValue);
                 } finally {
                     if (jedis != null) {

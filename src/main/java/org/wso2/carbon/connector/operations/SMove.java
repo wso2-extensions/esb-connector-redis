@@ -30,18 +30,18 @@ public class SMove extends AbstractConnector {
     public void connect(MessageContext messageContext) throws ConnectException {
         RedisServer serverObj = null;
         try {
-            serverObj = new RedisServer(messageContext);
+            serverObj = RedisConfig.getRedisServerInstance(messageContext);
             String srcKey = messageContext.getProperty(RedisConstants.SRCKEY).toString();
             String dstKey = messageContext.getProperty(RedisConstants.DSTKEY).toString();
             String member = messageContext.getProperty(RedisConstants.MEMBER).toString();
             Long response;
 
             if (serverObj.isClusterEnabled()) {
-                response = serverObj.getJedisCluster().smove(srcKey, dstKey, member);
+                response = serverObj.getJedisCluster(messageContext).smove(srcKey, dstKey, member);
             } else {
                 Jedis jedis = null;
                 try {
-                    jedis = serverObj.getJedis();
+                    jedis = serverObj.getJedis(messageContext);
                     response = jedis.smove(srcKey, dstKey, member);
                 } finally {
                     if (jedis != null) {

@@ -30,18 +30,18 @@ public class HSet extends AbstractConnector {
     public void connect(MessageContext messageContext) throws ConnectException {
         RedisServer serverObj = null;
         try {
-            serverObj = new RedisServer(messageContext);
+            serverObj = RedisConfig.getRedisServerInstance(messageContext);
             String key = messageContext.getProperty(RedisConstants.KEY).toString();
             String field = messageContext.getProperty(RedisConstants.FIELD).toString();
             String value = messageContext.getProperty(RedisConstants.VALUE).toString();
             Long response;
 
             if (serverObj.isClusterEnabled()) {
-                response = serverObj.getJedisCluster().hset(key, field, value);
+                response = serverObj.getJedisCluster(messageContext).hset(key, field, value);
             } else {
                 Jedis jedis = null;
                 try {
-                    jedis = serverObj.getJedis();
+                    jedis = serverObj.getJedis(messageContext);
                     response = jedis.hset(key, field, value);
                 } finally {
                     if (jedis != null) {

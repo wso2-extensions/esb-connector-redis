@@ -30,16 +30,16 @@ public class SPop extends AbstractConnector {
     public void connect(MessageContext messageContext) throws ConnectException {
         RedisServer serverObj = null;
         try {
-            serverObj = new RedisServer(messageContext);
+            serverObj = RedisConfig.getRedisServerInstance(messageContext);
             String key = messageContext.getProperty(RedisConstants.KEY).toString();
             String response;
 
             if (serverObj.isClusterEnabled()) {
-                response = serverObj.getJedisCluster().spop(key);
+                response = serverObj.getJedisCluster(messageContext).spop(key);
             } else {
                 Jedis jedis = null;
                 try {
-                    jedis = serverObj.getJedis();
+                    jedis = serverObj.getJedis(messageContext);
                     response = jedis.spop(key);
                 } finally {
                     if (jedis != null) {

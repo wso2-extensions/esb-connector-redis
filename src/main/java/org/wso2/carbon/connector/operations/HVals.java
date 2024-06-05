@@ -32,16 +32,16 @@ public class HVals extends AbstractConnector {
     public void connect(MessageContext messageContext) throws ConnectException {
         RedisServer serverObj = null;
         try {
-            serverObj = new RedisServer(messageContext);
+            serverObj = RedisConfig.getRedisServerInstance(messageContext);
             String key = messageContext.getProperty(RedisConstants.KEY).toString();
             List<String> response;
 
             if (serverObj.isClusterEnabled()) {
-                response = serverObj.getJedisCluster().hvals(key);
+                response = serverObj.getJedisCluster(messageContext).hvals(key);
             } else {
                 Jedis jedis = null;
                 try {
-                    jedis = serverObj.getJedis();
+                    jedis = serverObj.getJedis(messageContext);
                     response = jedis.hvals(key);
                 } finally {
                     if (jedis != null) {

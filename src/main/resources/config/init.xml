@@ -18,6 +18,7 @@
 -->
 
 <template name="init" xmlns="http://ws.apache.org/ns/synapse">
+    <parameter name="name" description="Unique name the connection is identified by"/>
     <parameter name="redisConnectionTimeout" description="time to live the connection in milliseconds"/>
     <parameter name="redisTimeout" description="time to live the server in milliseconds"/>
     <parameter name="cacheKey" description="key of the cache"/>
@@ -53,6 +54,12 @@
     <parameter name="dbNumber" description="dbNumber"/>
 
     <sequence>
+        <filter xpath="$func:name = '' or  not(string($func:name))">
+            <then/>
+            <else>
+                <property name="name" expression="$func:name"/>
+            </else>
+        </filter>
         <filter xpath="$func:redisPort = '' or  not(string($func:redisPort))">
             <then/>
             <else>
@@ -209,5 +216,6 @@
                 <property name="dbNumber" expression="$func:dbNumber"/>
             </else>
         </filter>
+        <class name="org.wso2.carbon.connector.operations.RedisConfig"/>
     </sequence>
 </template>

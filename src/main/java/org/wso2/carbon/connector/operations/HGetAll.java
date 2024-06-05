@@ -32,16 +32,16 @@ public class HGetAll extends AbstractConnector {
     public void connect(MessageContext messageContext) throws ConnectException {
         RedisServer serverObj = null;
         try {
-            serverObj = new RedisServer(messageContext);
+            serverObj = RedisConfig.getRedisServerInstance(messageContext);
             String key = messageContext.getProperty(RedisConstants.KEY).toString();
             Map<String, String> response;
 
             if (serverObj.isClusterEnabled()) {
-                response = serverObj.getJedisCluster().hgetAll(key);
+                response = serverObj.getJedisCluster(messageContext).hgetAll(key);
             } else {
                 Jedis jedis = null;
                 try {
-                    jedis = serverObj.getJedis();
+                    jedis = serverObj.getJedis(messageContext);
                     response = jedis.hgetAll(key);
                 } finally {
                     if (jedis != null) {

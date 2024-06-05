@@ -30,16 +30,16 @@ public class Expire extends AbstractConnector {
     public void connect(MessageContext messageContext) throws ConnectException {
         RedisServer serverObj = null;
         try {
-            serverObj = new RedisServer(messageContext);
+            serverObj = RedisConfig.getRedisServerInstance(messageContext);
             String key = messageContext.getProperty(RedisConstants.KEY).toString();
             int seconds = Integer.parseInt(messageContext.getProperty(RedisConstants.SECONDS).toString());
             Long response;
             if (serverObj.isClusterEnabled()) {
-                response = serverObj.getJedisCluster().expire(key, seconds);
+                response = serverObj.getJedisCluster(messageContext).expire(key, seconds);
             } else {
                 Jedis jedis = null;
                 try {
-                    jedis = serverObj.getJedis();
+                    jedis = serverObj.getJedis(messageContext);
                     response = jedis.expire(key, seconds);
                 } finally {
                     if (jedis != null) {

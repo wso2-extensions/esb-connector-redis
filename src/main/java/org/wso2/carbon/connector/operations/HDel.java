@@ -31,18 +31,18 @@ public class HDel extends AbstractConnector {
     public void connect(MessageContext messageContext) throws ConnectException {
         RedisServer serverObj = null;
         try {
-            serverObj = new RedisServer(messageContext);
+            serverObj = RedisConfig.getRedisServerInstance(messageContext);
             String key = messageContext.getProperty(RedisConstants.KEY).toString();
             String fields = messageContext.getProperty(RedisConstants.FIELDS).toString();
             String[] keyValue = fields.split(" ");
             Long response;
 
             if (serverObj.isClusterEnabled()) {
-                response = serverObj.getJedisCluster().hdel(key, keyValue);
+                response = serverObj.getJedisCluster(messageContext).hdel(key, keyValue);
             } else {
                 Jedis jedis = null;
                 try {
-                    jedis = serverObj.getJedis();
+                    jedis = serverObj.getJedis(messageContext);
                     response = jedis.hdel(key, keyValue);
                 } finally {
                     if (jedis != null) {

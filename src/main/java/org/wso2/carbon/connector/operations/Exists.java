@@ -30,16 +30,16 @@ public class Exists extends AbstractConnector {
     public void connect(MessageContext messageContext) throws ConnectException {
         RedisServer serverObj = null;
         try {
-            serverObj = new RedisServer(messageContext);
+            serverObj = RedisConfig.getRedisServerInstance(messageContext);
             String key = messageContext.getProperty(RedisConstants.KEY).toString();
             Boolean response;
 
             if (serverObj.isClusterEnabled()) {
-                response = serverObj.getJedisCluster().exists(key);
+                response = serverObj.getJedisCluster(messageContext).exists(key);
             } else {
                 Jedis jedis = null;
                 try {
-                    jedis = serverObj.getJedis();
+                    jedis = serverObj.getJedis(messageContext);
                     response = jedis.exists(key);
                 } finally {
                     if (jedis != null) {

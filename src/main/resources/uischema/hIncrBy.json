@@ -1,0 +1,72 @@
+{
+  "connectorName": "redis",
+  "operationName": "hIncrBy",
+  "title": "Operation hIncrBy in redis",
+  "help": "<h1>HIncrBy operation in redis</h1>",
+  "elements": [
+    {
+      "type": "attributeGroup",
+      "value": {
+        "groupName": "General",
+        "elements": [
+          {
+            "type": "attribute",
+            "value": {
+              "name": "configRef",
+              "displayName": "Redis Connection",
+              "inputType": "connection",
+              "allowedConnectionTypes": [
+                "REDIS"
+              ],
+              "defaultType": "connection.local",
+              "defaultValue": "",
+              "required": "true",
+              "helpTip": "File connection to be used"
+            }
+          },
+          {
+            "type": "attributeGroup",
+            "value": {
+              "groupName": "Basic",
+              "elements": [
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "redisKey",
+                    "displayName": "redisKey",
+                    "inputType": "stringOrExpression",
+                    "defaultValue": "",
+                    "required": "true",
+                    "helpTip": "Redis Key"
+                  }
+                },
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "redisField",
+                    "displayName": "redisField",
+                    "inputType": "stringOrExpression",
+                    "defaultValue": "",
+                    "required": "true",
+                    "helpTip": "Redis Field"
+                  }
+                },
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "redisValue",
+                    "displayName": "redisValue",
+                    "inputType": "stringOrExpression",
+                    "defaultValue": "",
+                    "required": "true",
+                    "helpTip": "Redis Value"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

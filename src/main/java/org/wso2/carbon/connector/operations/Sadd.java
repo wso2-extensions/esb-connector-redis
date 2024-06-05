@@ -30,18 +30,18 @@ public class Sadd extends AbstractConnector {
     public void connect(MessageContext messageContext) throws ConnectException {
         RedisServer serverObj = null;
         try {
-            serverObj = new RedisServer(messageContext);
+            serverObj = RedisConfig.getRedisServerInstance(messageContext);
             String key = messageContext.getProperty(RedisConstants.KEY).toString();
             String members = messageContext.getProperty(RedisConstants.MEMBERS).toString();
             String[] keyValue = members.split(" ");
             Long response;
 
             if (serverObj.isClusterEnabled()) {
-                response = serverObj.getJedisCluster().sadd(key, keyValue);
+                response = serverObj.getJedisCluster(messageContext).sadd(key, keyValue);
             } else {
                 Jedis jedis = null;
                 try {
-                    jedis = serverObj.getJedis();
+                    jedis = serverObj.getJedis(messageContext);
                     response = jedis.sadd(key, keyValue);
                 } finally {
                     if (jedis != null) {

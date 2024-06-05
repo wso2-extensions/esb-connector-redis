@@ -18,6 +18,9 @@
 
 package org.wso2.carbon.connector.util;
 
+import org.apache.synapse.MessageContext;
+import org.apache.synapse.SynapseException;
+
 /**
  * This class contains various utility methods related to common operations.
  */
@@ -62,6 +65,23 @@ public class RedisUtils {
         str = str.replace("\n", "\\n");
 
         return str;
+    }
+
+    public static String getTenantSpecificConnectionName(String connectionName, MessageContext messageContext) {
+        Object tenantDomain = messageContext.getProperty(RedisConstants.TENANT_INFO_DOMAIN);
+        if (tenantDomain != null) {
+            return String.format("%s@%s", connectionName, tenantDomain);
+        }
+        return connectionName;
+    }
+
+    public static String getConnectionName(MessageContext messageContext) throws SynapseException {
+
+        String connectionName = (String) messageContext.getProperty(RedisConstants.CONNECTION_NAME);
+        if (connectionName == null) {
+            throw new SynapseException("Connection name is not set.");
+        }
+        return getTenantSpecificConnectionName(connectionName, messageContext);
     }
 
 }

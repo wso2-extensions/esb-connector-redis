@@ -30,17 +30,17 @@ public class RPopLPush extends AbstractConnector {
     public void connect(MessageContext messageContext) throws ConnectException {
         RedisServer serverObj = null;
         try {
-            serverObj = new RedisServer(messageContext);
+            serverObj = RedisConfig.getRedisServerInstance(messageContext);
             String srcKey = messageContext.getProperty(RedisConstants.SRCKEY).toString();
             String dstKey = messageContext.getProperty(RedisConstants.DSTKEY).toString();
             String response;
 
             if (serverObj.isClusterEnabled()) {
-                response = serverObj.getJedisCluster().rpoplpush(srcKey, dstKey);
+                response = serverObj.getJedisCluster(messageContext).rpoplpush(srcKey, dstKey);
             } else {
                 Jedis jedis = null;
                 try {
-                    jedis = serverObj.getJedis();
+                    jedis = serverObj.getJedis(messageContext);
                     response = jedis.rpoplpush(srcKey, dstKey);
                 } finally {
                     if (jedis != null) {

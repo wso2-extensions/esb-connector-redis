@@ -50,5 +50,4 @@ public class Constants {
     public static final String REDIS_RESPONSE_ERROR = "error";
 
 
-
 }

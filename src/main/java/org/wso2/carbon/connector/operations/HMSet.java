@@ -33,7 +33,7 @@ public class HMSet extends AbstractConnector {
     public void connect(MessageContext messageContext) throws ConnectException {
         RedisServer serverObj = null;
         try {
-            serverObj = new RedisServer(messageContext);
+            serverObj = RedisConfig.getRedisServerInstance(messageContext);
             String key = messageContext.getProperty(RedisConstants.KEY).toString();
             Map<String, String> inputMap = new HashMap<String, String>();
             String fieldsValues = messageContext.getProperty(RedisConstants.FIELDSVALUES).toString();
@@ -44,11 +44,11 @@ public class HMSet extends AbstractConnector {
             String response;
 
             if (serverObj.isClusterEnabled()) {
-                response = serverObj.getJedisCluster().hmset(key, inputMap);
+                response = serverObj.getJedisCluster(messageContext).hmset(key, inputMap);
             } else {
                 Jedis jedis = null;
                 try {
-                    jedis = serverObj.getJedis();
+                    jedis = serverObj.getJedis(messageContext);
                     response = jedis.hmset(key, inputMap);
                 } finally {
                     if (jedis != null) {

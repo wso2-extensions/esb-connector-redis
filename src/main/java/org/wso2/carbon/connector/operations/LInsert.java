@@ -31,7 +31,7 @@ public class LInsert extends AbstractConnector {
     public void connect(MessageContext messageContext) throws ConnectException {
         RedisServer serverObj = null;
         try {
-            serverObj = new RedisServer(messageContext);
+            serverObj = RedisConfig.getRedisServerInstance(messageContext);
             String key = messageContext.getProperty(RedisConstants.KEY).toString();
             ListPosition where = ListPosition.valueOf(messageContext.getProperty(RedisConstants.WHERE).toString());
             String pivot = messageContext.getProperty(RedisConstants.PIVOT).toString();
@@ -39,11 +39,11 @@ public class LInsert extends AbstractConnector {
             Long response;
 
             if (serverObj.isClusterEnabled()) {
-                response = serverObj.getJedisCluster().linsert(key, where, pivot, value);
+                response = serverObj.getJedisCluster(messageContext).linsert(key, where, pivot, value);
             } else {
                 Jedis jedis = null;
                 try {
-                    jedis = serverObj.getJedis();
+                    jedis = serverObj.getJedis(messageContext);
                     response = jedis.linsert(key, where, pivot, value);
                 } finally {
                     if (jedis != null) {

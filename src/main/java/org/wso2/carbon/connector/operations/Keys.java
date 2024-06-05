@@ -32,16 +32,16 @@ public class Keys extends AbstractConnector {
     public void connect(MessageContext messageContext) throws ConnectException {
         RedisServer serverObj = null;
         try {
-            serverObj = new RedisServer(messageContext);
+            serverObj = RedisConfig.getRedisServerInstance(messageContext);
             String pattern = messageContext.getProperty(RedisConstants.PATTERN).toString();
             Set<String> response;
 
             if (serverObj.isClusterEnabled()) {
-                response = serverObj.getJedisCluster().keys(pattern);
+                response = serverObj.getJedisCluster(messageContext).keys(pattern);
             } else {
                 Jedis jedis = null;
                 try {
-                    jedis = serverObj.getJedis();
+                    jedis = serverObj.getJedis(messageContext);
                     response = jedis.keys(pattern);
                 } finally {
                     if (jedis != null) {

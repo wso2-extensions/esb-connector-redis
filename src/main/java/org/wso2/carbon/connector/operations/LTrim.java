@@ -30,18 +30,18 @@ public class LTrim extends AbstractConnector {
     public void connect(MessageContext messageContext) throws ConnectException {
         RedisServer serverObj = null;
         try {
-            serverObj = new RedisServer(messageContext);
+            serverObj = RedisConfig.getRedisServerInstance(messageContext);
             String key = messageContext.getProperty(RedisConstants.KEY).toString();
             long start = Long.parseLong(messageContext.getProperty(RedisConstants.START).toString());
             long end = Long.parseLong(messageContext.getProperty(RedisConstants.END).toString());
             String response;
 
             if (serverObj.isClusterEnabled()) {
-                response = serverObj.getJedisCluster().ltrim(key, start, end);
+                response = serverObj.getJedisCluster(messageContext).ltrim(key, start, end);
             } else {
                 Jedis jedis = null;
                 try {
-                    jedis = serverObj.getJedis();
+                    jedis = serverObj.getJedis(messageContext);
                     response = jedis.ltrim(key, start, end);
                 } finally {
                     if (jedis != null) {

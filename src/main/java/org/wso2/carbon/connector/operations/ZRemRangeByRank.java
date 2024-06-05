@@ -30,18 +30,18 @@ public class ZRemRangeByRank extends AbstractConnector {
     public void connect(MessageContext messageContext) throws ConnectException {
         RedisServer serverObj = null;
         try {
-            serverObj = new RedisServer(messageContext);
+            serverObj = RedisConfig.getRedisServerInstance(messageContext);
             String key = messageContext.getProperty(RedisConstants.KEY).toString();
             long start = Long.parseLong(messageContext.getProperty(RedisConstants.START).toString());
             long end = Long.parseLong(messageContext.getProperty(RedisConstants.END).toString());
             Long response;
 
             if (serverObj.isClusterEnabled()) {
-                response = serverObj.getJedisCluster().zremrangeByRank(key, start, end);
+                response = serverObj.getJedisCluster(messageContext).zremrangeByRank(key, start, end);
             } else {
                 Jedis jedis = null;
                 try {
-                    jedis = serverObj.getJedis();
+                    jedis = serverObj.getJedis(messageContext);
                     response = jedis.zremrangeByRank(key, start, end);
                 } finally {
                     if (jedis != null) {

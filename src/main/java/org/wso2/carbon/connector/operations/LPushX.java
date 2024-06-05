@@ -30,17 +30,17 @@ public class LPushX extends AbstractConnector {
     public void connect(MessageContext messageContext) throws ConnectException {
         RedisServer serverObj = null;
         try {
-            serverObj = new RedisServer(messageContext);
+            serverObj = RedisConfig.getRedisServerInstance(messageContext);
             String key = messageContext.getProperty(RedisConstants.KEY).toString();
             String string = messageContext.getProperty(RedisConstants.STRING).toString();
             Long response;
 
             if (serverObj.isClusterEnabled()) {
-                response = serverObj.getJedisCluster().lpush(key, string);
+                response = serverObj.getJedisCluster(messageContext).lpush(key, string);
             } else {
                 Jedis jedis = null;
                 try {
-                    jedis = serverObj.getJedis();
+                    jedis = serverObj.getJedis(messageContext);
                     response = jedis.lpush(key, string);
                 } finally {
                     if (jedis != null) {

@@ -1,0 +1,61 @@
+{
+  "connectorName": "redis",
+  "operationName": "hDel",
+  "title": "Operation hDel in redis",
+  "help": "<h1>HDel operation in redis</h1>",
+  "elements": [
+    {
+      "type": "attributeGroup",
+      "value": {
+        "groupName": "General",
+        "elements": [
+          {
+            "type": "attribute",
+            "value": {
+              "name": "configRef",
+              "displayName": "Redis Connection",
+              "inputType": "connection",
+              "allowedConnectionTypes": [
+                "REDIS"
+              ],
+              "defaultType": "connection.local",
+              "defaultValue": "",
+              "required": "true",
+              "helpTip": "File connection to be used"
+            }
+          },
+          {
+            "type": "attributeGroup",
+            "value": {
+              "groupName": "Basic",
+              "elements": [
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "redisKey",
+                    "displayName": "redisKey",
+                    "inputType": "stringOrExpression",
+                    "defaultValue": "",
+                    "required": "true",
+                    "helpTip": "Redis Key"
+                  }
+                },
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "redisFields",
+                    "displayName": "redisFields",
+                    "inputType": "stringOrExpression",
+                    "defaultValue": "",
+                    "required": "true",
+                    "helpTip": "The values of the fields to be deleted"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

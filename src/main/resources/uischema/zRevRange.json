@@ -1,0 +1,72 @@
+{
+  "connectorName": "redis",
+  "operationName": "zRevRange",
+  "title": "Operation zRevRange in redis",
+  "help": "<h1>ZRevRange operation in redis</h1>",
+  "elements": [
+    {
+      "type": "attributeGroup",
+      "value": {
+        "groupName": "General",
+        "elements": [
+          {
+            "type": "attribute",
+            "value": {
+              "name": "configRef",
+              "displayName": "Redis Connection",
+              "inputType": "connection",
+              "allowedConnectionTypes": [
+                "REDIS"
+              ],
+              "defaultType": "connection.local",
+              "defaultValue": "",
+              "required": "true",
+              "helpTip": "File connection to be used"
+            }
+          },
+          {
+            "type": "attributeGroup",
+            "value": {
+              "groupName": "Basic",
+              "elements": [
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "redisKey",
+                    "displayName": "redisKey",
+                    "inputType": "stringOrExpression",
+                    "defaultValue": "",
+                    "required": "true",
+                    "helpTip": "Redis Key"
+                  }
+                },
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "redisStart",
+                    "displayName": "redisStart",
+                    "inputType": "stringOrExpression",
+                    "defaultValue": "",
+                    "required": "true",
+                    "helpTip": "Redis Start"
+                  }
+                },
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "redisEnd",
+                    "displayName": "redisEnd",
+                    "inputType": "stringOrExpression",
+                    "defaultValue": "",
+                    "required": "true",
+                    "helpTip": "Redis End"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

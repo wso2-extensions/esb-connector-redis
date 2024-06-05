@@ -30,18 +30,18 @@ public class LSet extends AbstractConnector {
     public void connect(MessageContext messageContext) throws ConnectException {
         RedisServer serverObj = null;
         try {
-            serverObj = new RedisServer(messageContext);
+            serverObj = RedisConfig.getRedisServerInstance(messageContext);
             String key = messageContext.getProperty(RedisConstants.KEY).toString();
             long index = Long.parseLong(messageContext.getProperty(RedisConstants.INDEX).toString());
             String value = messageContext.getProperty(RedisConstants.VALUE).toString();
             String response;
 
             if (serverObj.isClusterEnabled()) {
-                response = serverObj.getJedisCluster().lset(key, index, value);
+                response = serverObj.getJedisCluster(messageContext).lset(key, index, value);
             } else {
                 Jedis jedis = null;
                 try {
-                    jedis = serverObj.getJedis();
+                    jedis = serverObj.getJedis(messageContext);
                     response = jedis.lset(key, index, value);
                 } finally {
                     if (jedis != null) {

@@ -30,12 +30,12 @@ public class GetObjectIdleTime extends AbstractConnector {
     public void connect(MessageContext messageContext) throws ConnectException {
         RedisServer serverObj = null;
         try {
-            serverObj = new RedisServer(messageContext);
+            serverObj = RedisConfig.getRedisServerInstance(messageContext);
             String key = messageContext.getProperty(RedisConstants.KEY).toString();
             String response;
             Jedis jedis = null;
             try {
-                jedis = serverObj.getJedis();
+                jedis = serverObj.getJedis(messageContext);
                 response = jedis.objectIdletime(key.getBytes()).toString();
             } finally {
                 if (jedis != null) {
