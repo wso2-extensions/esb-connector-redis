@@ -30,17 +30,17 @@ public class HExists extends AbstractConnector {
     public void connect(MessageContext messageContext) throws ConnectException {
         RedisServer serverObj = null;
         try {
-            serverObj = new RedisServer(messageContext);
+            serverObj = RedisConfig.getRedisServerInstance(messageContext);
             String key = messageContext.getProperty(RedisConstants.KEY).toString();
             String field = messageContext.getProperty(RedisConstants.FIELD).toString();
             Boolean response;
 
             if (serverObj.isClusterEnabled()) {
-                response = serverObj.getJedisCluster().hexists(key, field);
+                response = serverObj.getJedisCluster(messageContext).hexists(key, field);
             } else {
                 Jedis jedis = null;
                 try {
-                    jedis = serverObj.getJedis();
+                    jedis = serverObj.getJedis(messageContext);
                     response = jedis.hexists(key, field);
                 } finally {
                     if (jedis != null) {

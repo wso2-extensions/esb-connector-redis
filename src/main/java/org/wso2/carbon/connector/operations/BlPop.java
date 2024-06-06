@@ -38,13 +38,13 @@ public class BlPop extends AbstractConnector {
             String[] keyValue = key.split(" ");
             List<String> response;
 
-            serverObj = new RedisServer(messageContext);
+            serverObj = RedisConfig.getRedisServerInstance(messageContext);
             if (serverObj.isClusterEnabled()) {
-                response = serverObj.getJedisCluster().blpop(blPopTimeout, keyValue);
+                response = serverObj.getJedisCluster(messageContext).blpop(blPopTimeout, keyValue);
             } else {
                 Jedis jedis = null;
                 try {
-                    jedis = serverObj.getJedis();
+                    jedis = serverObj.getJedis(messageContext);
                     response = jedis.blpop(blPopTimeout, keyValue);
                 } finally {
                     if (jedis != null) {

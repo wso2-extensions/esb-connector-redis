@@ -32,18 +32,18 @@ public class ZRange extends AbstractConnector {
     public void connect(MessageContext messageContext) throws ConnectException {
         RedisServer serverObj = null;
         try {
-            serverObj = new RedisServer(messageContext);
+            serverObj = RedisConfig.getRedisServerInstance(messageContext);
             String key = messageContext.getProperty(RedisConstants.KEY).toString();
             long start = Long.parseLong(messageContext.getProperty(RedisConstants.START).toString());
             long end = Long.parseLong(messageContext.getProperty(RedisConstants.END).toString());
             Set<String> response;
 
             if (serverObj.isClusterEnabled()) {
-                response = serverObj.getJedisCluster().zrange(key, start, end);
+                response = serverObj.getJedisCluster(messageContext).zrange(key, start, end);
             } else {
                 Jedis jedis = null;
                 try {
-                    jedis = serverObj.getJedis();
+                    jedis = serverObj.getJedis(messageContext);
                     response = jedis.zrange(key, start, end);
                 } finally {
                     if (jedis != null) {

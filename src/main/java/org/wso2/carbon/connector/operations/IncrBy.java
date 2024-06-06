@@ -30,17 +30,17 @@ public class IncrBy extends AbstractConnector {
     public void connect(MessageContext messageContext) throws ConnectException {
         RedisServer serverObj = null;
         try {
-            serverObj = new RedisServer(messageContext);
+            serverObj = RedisConfig.getRedisServerInstance(messageContext);
             String key = messageContext.getProperty(RedisConstants.KEY).toString();
             long integer = Long.parseLong(messageContext.getProperty(RedisConstants.INTEGER).toString());
             Long response;
 
             if (serverObj.isClusterEnabled()) {
-                response = serverObj.getJedisCluster().incrBy(key, integer);
+                response = serverObj.getJedisCluster(messageContext).incrBy(key, integer);
             } else {
                 Jedis jedis = null;
                 try {
-                    jedis = serverObj.getJedis();
+                    jedis = serverObj.getJedis(messageContext);
                     response = jedis.incrBy(key, integer);
                 } finally {
                     if (jedis != null) {

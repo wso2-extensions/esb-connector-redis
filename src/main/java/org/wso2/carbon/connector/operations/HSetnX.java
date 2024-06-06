@@ -30,18 +30,18 @@ public class HSetnX extends AbstractConnector {
     public void connect(MessageContext messageContext) throws ConnectException {
         RedisServer serverObj = null;
         try {
-            serverObj = new RedisServer(messageContext);
+            serverObj = RedisConfig.getRedisServerInstance(messageContext);
             String key = messageContext.getProperty(RedisConstants.KEY).toString();
             String field = messageContext.getProperty(RedisConstants.FIELD).toString();
             String value = messageContext.getProperty(RedisConstants.VALUE).toString();
             Long response;
 
             if (serverObj.isClusterEnabled()) {
-                response = serverObj.getJedisCluster().hsetnx(key, field, value);
+                response = serverObj.getJedisCluster(messageContext).hsetnx(key, field, value);
             } else {
                 Jedis jedis = null;
                 try {
-                    jedis = serverObj.getJedis();
+                    jedis = serverObj.getJedis(messageContext);
                     response = jedis.hsetnx(key, field, value);
                 } finally {
                     if (jedis != null) {

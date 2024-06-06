@@ -30,17 +30,17 @@ public class SIsMember extends AbstractConnector {
     public void connect(MessageContext messageContext) throws ConnectException {
         RedisServer serverObj = null;
         try {
-            serverObj = new RedisServer(messageContext);
+            serverObj = RedisConfig.getRedisServerInstance(messageContext);
             String key = messageContext.getProperty(RedisConstants.KEY).toString();
             String member = messageContext.getProperty(RedisConstants.MEMBER).toString();
             Boolean response;
 
             if (serverObj.isClusterEnabled()) {
-                response = serverObj.getJedisCluster().sismember(key, member);
+                response = serverObj.getJedisCluster(messageContext).sismember(key, member);
             } else {
                 Jedis jedis = null;
                 try {
-                    jedis = serverObj.getJedis();
+                    jedis = serverObj.getJedis(messageContext);
                     response = jedis.sismember(key, member);
                 } finally {
                     if (jedis != null) {

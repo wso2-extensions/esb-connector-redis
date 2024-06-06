@@ -30,18 +30,18 @@ public class Zadd extends AbstractConnector {
     public void connect(MessageContext messageContext) throws ConnectException {
         RedisServer serverObj = null;
         try {
-            serverObj = new RedisServer(messageContext);
+            serverObj = RedisConfig.getRedisServerInstance(messageContext);
             String key = messageContext.getProperty(RedisConstants.KEY).toString();
             double score = Double.parseDouble(messageContext.getProperty(RedisConstants.SCORE).toString());
             String member = messageContext.getProperty(RedisConstants.MEMBER).toString();
             Long response;
 
             if (serverObj.isClusterEnabled()) {
-                response = serverObj.getJedisCluster().zadd(key, score, member);
+                response = serverObj.getJedisCluster(messageContext).zadd(key, score, member);
             } else {
                 Jedis jedis = null;
                 try {
-                    jedis = serverObj.getJedis();
+                    jedis = serverObj.getJedis(messageContext);
                     response = jedis.zadd(key, score, member);
                 } finally {
                     if (jedis != null) {

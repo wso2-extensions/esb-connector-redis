@@ -30,18 +30,18 @@ public class ZIncrBy extends AbstractConnector {
     public void connect(MessageContext messageContext) throws ConnectException {
         RedisServer serverObj = null;
         try {
-            serverObj = new RedisServer(messageContext);
+            serverObj = RedisConfig.getRedisServerInstance(messageContext);
             String key = messageContext.getProperty(RedisConstants.KEY).toString();
             double score = Double.parseDouble(messageContext.getProperty(RedisConstants.SCORE).toString());
             String member = messageContext.getProperty(RedisConstants.MEMBER).toString();
             Double response;
 
             if (serverObj.isClusterEnabled()) {
-                response = serverObj.getJedisCluster().zincrby(key, score, member);
+                response = serverObj.getJedisCluster(messageContext).zincrby(key, score, member);
             } else {
                 Jedis jedis = null;
                 try {
-                    jedis = serverObj.getJedis();
+                    jedis = serverObj.getJedis(messageContext);
                     response = jedis.zincrby(key, score, member);
                 } finally {
                     if (jedis != null) {

@@ -1,0 +1,72 @@
+{
+  "connectorName": "redis",
+  "operationName": "zCount",
+  "title": "Operation zCount in redis",
+  "help": "<h1>ZCount operation in redis</h1>",
+  "elements": [
+    {
+      "type": "attributeGroup",
+      "value": {
+        "groupName": "General",
+        "elements": [
+          {
+            "type": "attribute",
+            "value": {
+              "name": "configRef",
+              "displayName": "Redis Connection",
+              "inputType": "connection",
+              "allowedConnectionTypes": [
+                "REDIS"
+              ],
+              "defaultType": "connection.local",
+              "defaultValue": "",
+              "required": "true",
+              "helpTip": "File connection to be used"
+            }
+          },
+          {
+            "type": "attributeGroup",
+            "value": {
+              "groupName": "Basic",
+              "elements": [
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "redisKey",
+                    "displayName": "redisKey",
+                    "inputType": "stringOrExpression",
+                    "defaultValue": "",
+                    "required": "true",
+                    "helpTip": "Redis Key"
+                  }
+                },
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "redisMin",
+                    "displayName": "redisMin",
+                    "inputType": "stringOrExpression",
+                    "defaultValue": "",
+                    "required": "true",
+                    "helpTip": "Redis Min"
+                  }
+                },
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "redisMax",
+                    "displayName": "redisMax",
+                    "inputType": "stringOrExpression",
+                    "defaultValue": "",
+                    "required": "true",
+                    "helpTip": "Redis Max"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

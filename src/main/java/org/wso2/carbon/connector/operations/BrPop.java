@@ -32,18 +32,18 @@ public class BrPop extends AbstractConnector {
     public void connect(MessageContext messageContext) throws ConnectException {
         RedisServer serverObj = null;
         try {
-            serverObj = new RedisServer(messageContext);
+            serverObj = RedisConfig.getRedisServerInstance(messageContext);
             String key = messageContext.getProperty(RedisConstants.KEY).toString();
             int brpopTimeout = Integer.parseInt(messageContext.getProperty(RedisConstants.BRPOPTIMEOUT).toString());
             String[] keyValue = key.split(" ");
             List<String> response;
 
             if (serverObj.isClusterEnabled()) {
-                response = serverObj.getJedisCluster().brpop(brpopTimeout, keyValue);
+                response = serverObj.getJedisCluster(messageContext).brpop(brpopTimeout, keyValue);
             } else {
                 Jedis jedis = null;
                 try {
-                    jedis = serverObj.getJedis();
+                    jedis = serverObj.getJedis(messageContext);
                     response = jedis.brpop(brpopTimeout, keyValue);
                 } finally {
                     if (jedis != null) {

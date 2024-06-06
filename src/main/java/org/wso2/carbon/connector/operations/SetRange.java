@@ -30,18 +30,18 @@ public class SetRange extends AbstractConnector {
     public void connect(MessageContext messageContext) throws ConnectException {
         RedisServer serverObj = null;
         try {
-            serverObj = new RedisServer(messageContext);
+            serverObj = RedisConfig.getRedisServerInstance(messageContext);
             String key = messageContext.getProperty(RedisConstants.KEY).toString();
             long offset = Long.parseLong(messageContext.getProperty(RedisConstants.OFFSET).toString());
             String value = messageContext.getProperty(RedisConstants.VALUE).toString();
             Long response;
 
             if (serverObj.isClusterEnabled()) {
-                response = serverObj.getJedisCluster().setrange(key, offset, value);
+                response = serverObj.getJedisCluster(messageContext).setrange(key, offset, value);
             } else {
                 Jedis jedis = null;
                 try {
-                    jedis = serverObj.getJedis();
+                    jedis = serverObj.getJedis(messageContext);
                     response = jedis.setrange(key, offset, value);
                 } finally {
                     if (jedis != null) {

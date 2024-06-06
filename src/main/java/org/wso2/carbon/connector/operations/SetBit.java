@@ -30,18 +30,18 @@ public class SetBit extends AbstractConnector {
     public void connect(MessageContext messageContext) throws ConnectException {
         RedisServer serverObj = null;
         try {
-            serverObj = new RedisServer(messageContext);
+            serverObj = RedisConfig.getRedisServerInstance(messageContext);
             String key = messageContext.getProperty(RedisConstants.KEY).toString();
             long offset = Long.parseLong(messageContext.getProperty(RedisConstants.OFFSET).toString());
             boolean value = Boolean.parseBoolean(messageContext.getProperty(RedisConstants.VALUE).toString());
             Boolean response;
 
             if (serverObj.isClusterEnabled()) {
-                response = serverObj.getJedisCluster().setbit(key, offset, value);
+                response = serverObj.getJedisCluster(messageContext).setbit(key, offset, value);
             } else {
                 Jedis jedis = null;
                 try {
-                    jedis = serverObj.getJedis();
+                    jedis = serverObj.getJedis(messageContext);
                     response = jedis.setbit(key, offset, value);
                 } finally {
                     if (jedis != null) {

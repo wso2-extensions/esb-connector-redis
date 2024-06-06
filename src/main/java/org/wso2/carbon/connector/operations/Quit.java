@@ -30,7 +30,7 @@ public class Quit extends AbstractConnector {
     public void connect(MessageContext messageContext) throws ConnectException {
         RedisServer serverObj = null;
         try {
-            serverObj = new RedisServer(messageContext);
+            serverObj = RedisConfig.getRedisServerInstance(messageContext);
             String response = null;
 
             if (serverObj.isClusterEnabled()) {
@@ -38,7 +38,7 @@ public class Quit extends AbstractConnector {
             } else {
                 Jedis jedis = null;
                 try {
-                    jedis = serverObj.getJedis();
+                    jedis = serverObj.getJedis(messageContext);
                     response = jedis.quit();
                 } finally {
                     if (jedis != null) {

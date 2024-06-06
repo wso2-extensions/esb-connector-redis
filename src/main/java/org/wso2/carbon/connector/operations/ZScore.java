@@ -30,17 +30,17 @@ public class ZScore extends AbstractConnector {
     public void connect(MessageContext messageContext) throws ConnectException {
         RedisServer serverObj = null;
         try {
-            serverObj = new RedisServer(messageContext);
+            serverObj = RedisConfig.getRedisServerInstance(messageContext);
             String key = messageContext.getProperty(RedisConstants.KEY).toString();
             String member = messageContext.getProperty(RedisConstants.MEMBER).toString();
             Double response;
 
             if (serverObj.isClusterEnabled()) {
-                response = serverObj.getJedisCluster().zscore(key, member);
+                response = serverObj.getJedisCluster(messageContext).zscore(key, member);
             } else {
                 Jedis jedis = null;
                 try {
-                    jedis = serverObj.getJedis();
+                    jedis = serverObj.getJedis(messageContext);
                     response = jedis.zscore(key, member);
                 } finally {
                     if (jedis != null) {

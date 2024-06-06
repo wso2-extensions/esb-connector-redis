@@ -30,17 +30,17 @@ public class Rename extends AbstractConnector {
     public void connect(MessageContext messageContext) throws ConnectException {
         RedisServer serverObj = null;
         try {
-            serverObj = new RedisServer(messageContext);
+            serverObj = RedisConfig.getRedisServerInstance(messageContext);
             String oldKey = messageContext.getProperty(RedisConstants.OLDKEY).toString();
             String newKey = messageContext.getProperty(RedisConstants.NEWKEY).toString();
             String response;
 
             if (serverObj.isClusterEnabled()) {
-                response = serverObj.getJedisCluster().rename(oldKey, newKey);
+                response = serverObj.getJedisCluster(messageContext).rename(oldKey, newKey);
             } else {
                 Jedis jedis = null;
                 try {
-                    jedis = serverObj.getJedis();
+                    jedis = serverObj.getJedis(messageContext);
                     response = jedis.rename(oldKey, newKey);
                 } finally {
                     if (jedis != null) {

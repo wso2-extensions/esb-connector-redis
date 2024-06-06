@@ -30,18 +30,18 @@ public class SUnionStore extends AbstractConnector {
     public void connect(MessageContext messageContext) throws ConnectException {
         RedisServer serverObj = null;
         try {
-            serverObj = new RedisServer(messageContext);
+            serverObj = RedisConfig.getRedisServerInstance(messageContext);
             String key = messageContext.getProperty(RedisConstants.KEY).toString();
             String dstKey = messageContext.getProperty(RedisConstants.DSTKEY).toString();
             String[] keyValue = key.split(" ");
             Long response;
 
             if (serverObj.isClusterEnabled()) {
-                response = serverObj.getJedisCluster().sunionstore(dstKey, keyValue);
+                response = serverObj.getJedisCluster(messageContext).sunionstore(dstKey, keyValue);
             } else {
                 Jedis jedis = null;
                 try {
-                    jedis = serverObj.getJedis();
+                    jedis = serverObj.getJedis(messageContext);
                     response = jedis.sunionstore(dstKey, keyValue);
                 } finally {
                     if (jedis != null) {

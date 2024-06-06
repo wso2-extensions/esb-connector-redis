@@ -31,18 +31,18 @@ public class ZInterStore extends AbstractConnector {
     public void connect(MessageContext messageContext) throws ConnectException {
         RedisServer serverObj = null;
         try {
-            serverObj = new RedisServer(messageContext);
+            serverObj = RedisConfig.getRedisServerInstance(messageContext);
             String dstKey = messageContext.getProperty(RedisConstants.DSTKEY).toString();
             String sets = messageContext.getProperty(RedisConstants.SETS).toString();
             String[] keyValue = sets.split(" ");
             Long response;
 
             if (serverObj.isClusterEnabled()) {
-                response = serverObj.getJedisCluster().zinterstore(dstKey, keyValue);
+                response = serverObj.getJedisCluster(messageContext).zinterstore(dstKey, keyValue);
             } else {
                 Jedis jedis = null;
                 try {
-                    jedis = serverObj.getJedis();
+                    jedis = serverObj.getJedis(messageContext);
                     response = jedis.zinterstore(dstKey, keyValue);
                 } finally {
                     if (jedis != null) {

@@ -30,16 +30,16 @@ public class LPop extends AbstractConnector {
     public void connect(MessageContext messageContext) throws ConnectException {
         RedisServer serverObj = null;
         try {
-            serverObj = new RedisServer(messageContext);
+            serverObj = RedisConfig.getRedisServerInstance(messageContext);
             String key = messageContext.getProperty(RedisConstants.KEY).toString();
             String response;
 
             if (serverObj.isClusterEnabled()) {
-                response = serverObj.getJedisCluster().lpop(key);
+                response = serverObj.getJedisCluster(messageContext).lpop(key);
             } else {
                 Jedis jedis = null;
                 try {
-                    jedis = serverObj.getJedis();
+                    jedis = serverObj.getJedis(messageContext);
                     response = jedis.lpop(key);
                 } finally {
                     if (jedis != null) {
