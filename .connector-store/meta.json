@@ -1,12 +1,22 @@
 {
     "name": "Redis",
-    "owner": "Redis Labs",
+    "owner": "WSO2",
     "category": "Other",
     "documentationUrl": "https://apim.docs.wso2.com/en/latest/reference/connectors/redis-connector/redis-connector-overview/",
-    "description": "The Redis connector allows you to access the Redis commands through the WSO2 EI. Redis is an open source (BSD licensed), in-memory data structure store, used as a database, cache and message broker. It supports data structures such as strings, hashes, lists, sets, sorted sets with range queries, bitmaps, hyperloglogs and geospatial indexes with radius queries.In latest version we have added following:Previously we were creating a single pool for each cluster operation and closing it after each operation that's why read\/write lock issue occurs (jmxRegister and jmxUnRegister on the same object). This Pr rectifies that and also avoids closing JedisCluster after each operation since It's no need to close the JedisCluster instance as it is handled by the JedisClusterConnectionPool itself.Also introduced the \"isJmxEnabled\" property to enable JMX if required.",
+    "description": "The Redis connector allows you to access the Redis commands through the WSO2 EI. Redis is an open source (BSD licensed), in-memory data structure store, used as a database, cache and message broker. It supports data structures such as strings, hashes, lists, sets, sorted sets with range queries, bitmaps, hyperloglogs and geospatial indexes with radius queries.\nIn latest version we have added following:\nPreviously we were creating a single pool for each cluster operation and closing it after each operation that's why read/write lock issue occurs (jmxRegister and jmxUnRegister on the same object). This Pr rectifies that and also avoids closing JedisCluster after each operation since It's no need to close the JedisCluster instance as it is handled by the JedisClusterConnectionPool itself.\n\nAlso introduced the \"isJmxEnabled\" property to enable JMX if required.",
     "status": "Active",
     "labels": [
-        "Database"
+        "connector"
     ],
-    "releases": []
+    "releases": [
+        {
+            "tag_name": "v2.7.0",
+            "products": [
+                "EI 7.0.x",
+                "EI 6.6.0",
+                "EI 7.1.0"
+            ],
+            "isHidden": false
+        }
+    ]
 }
