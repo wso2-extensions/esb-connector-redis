@@ -20,16 +20,42 @@
 <template xmlns="http://ws.apache.org/ns/synapse" name="hGet">
     <parameter name="redisKey" description="the name of the key"/>
     <parameter name="redisField" description="the value of the field"/>
+    <parameter name="mediaType" description="the media type of the data"/>
     <sequence>
-        <property name="redisKey" expression="$func:redisKey"/>
-        <property name="redisField" expression="$func:redisField"/>
-        <class name="org.wso2.carbon.connector.operations.HGet"/>
-        <property name="redisResponse" expression="$ctx:result"/>
-        <payloadFactory media-type="text">
-            <format>$1</format>
-            <args>
-                <arg evaluator="xml" expression="$ctx:redisResponse"/>
-            </args>
-        </payloadFactory>
+        <property name="redisKey" expression="$func:redisKey" />
+        <property name="redisField" expression="$func:redisField" />
+        <property name="mediaType" expression="$func:mediaType" />
+        <class name="org.wso2.carbon.connector.operations.HGet" />
+        <property name="redisResponse" expression="$ctx:result" />
+        <switch source="$ctx:mediaType">
+            <case regex="json">
+                <payloadFactory media-type="json">
+                    <format>$1</format>
+                    <args>
+                        <arg evaluator="xml" expression="$ctx:redisResponse" />
+                    </args>
+                </payloadFactory>
+            </case>
+            <case regex="xml">
+                <payloadFactory media-type="xml">
+                    <format>
+                        <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+                            <soapenv:Body>$1</soapenv:Body>
+                        </soapenv:Envelope>
+                    </format>
+                    <args>
+                        <arg evaluator="xml" expression="$ctx:redisResponse" />
+                    </args>
+                </payloadFactory>
+            </case>
+            <default>
+                <payloadFactory media-type="text">
+                    <format>$1</format>
+                    <args>
+                        <arg evaluator="xml" expression="$ctx:redisResponse" />
+                    </args>
+                </payloadFactory>
+            </default>
+        </switch>
     </sequence>
 </template>

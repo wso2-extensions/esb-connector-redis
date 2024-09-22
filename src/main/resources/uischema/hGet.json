@@ -50,6 +50,22 @@
                     "required": "true",
                     "helpTip": "Redis Field"
                   }
+                },
+                {
+                  "type": "attribute",
+                  "value": {
+                    "name": "mediaType",
+                    "displayName": "Media Type",
+                    "inputType": "comboOrExpression",
+                    "comboValues": [
+                      "text",
+                      "json",
+                      "xml"
+                    ],
+                    "defaultValue": "text",
+                    "required": "false",
+                    "helpTip": "Media type of the redis data"
+                  }
                 }
               ]
             }
