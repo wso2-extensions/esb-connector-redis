@@ -10,7 +10,7 @@
     ],
     "releases": [
         {
-            "tagName": "v3.1.2",
+            "tagName": "v3.1.3",
             "products": [
                 "MI 1.2.0",
                 "MI 4.x.x"
