@@ -199,10 +199,10 @@
         </dependency>
     </dependencies>
     <scm>
-        <connection>scm:git:https://github.com/wso2-extensions/esb-connector-redis.git
+        <connection>scm:git:https://github.com/ShammiL/esb-connector-redis.git
         </connection>
-        <url>https://github.com/wso2-extensions/esb-connector-redis.git</url>
-        <developerConnection>scm:git:https://github.com/wso2-extensions/esb-connector-redis
+        <url>https://github.com/ShammiL/esb-connector-redis.git</url>
+        <developerConnection>scm:git:https://github.com/ShammiL/esb-connector-redis
         </developerConnection>
         <tag>HEAD</tag>
     </scm>
