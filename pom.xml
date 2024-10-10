@@ -17,13 +17,12 @@
    under the License.
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.wso2.carbon.connector</groupId>
     <artifactId>org.wso2.carbon.connector.redis</artifactId>
     <packaging>jar</packaging>
-    <version>3.1.4-SNAPSHOT</version>
+    <version>3.1.4</version>
     <name>WSO2 Carbon - Mediation Library Connector For Redis</name>
     <url>http://wso2.org</url>
     <properties>
@@ -199,12 +198,12 @@
         </dependency>
     </dependencies>
     <scm>
-        <connection>scm:git:https://github.com/wso2-extensions/esb-connector-redis.git
+        <connection>scm:git:https://github.com/ShammiL/esb-connector-redis.git
         </connection>
-        <url>https://github.com/wso2-extensions/esb-connector-redis.git</url>
-        <developerConnection>scm:git:https://github.com/wso2-extensions/esb-connector-redis
+        <url>https://github.com/ShammiL/esb-connector-redis.git</url>
+        <developerConnection>scm:git:https://github.com/ShammiL/esb-connector-redis
         </developerConnection>
-        <tag>HEAD</tag>
+        <tag>org.wso2.carbon.connector.redis-3.1.4</tag>
     </scm>
     <build>
         <plugins>
@@ -226,7 +225,7 @@
                         <id>email-library</id>
                         <phase>compile</phase>
                         <goals>
-                            <goal>attached</goal>
+                            <goal>single</goal>
                         </goals>
                         <configuration>
                             <finalName>${connector.name}-connector-${version}</finalName>
@@ -380,16 +379,28 @@
             </releases>
         </repository>
     </repositories>
+<!--    <distributionManagement>-->
+<!--        <repository>-->
+<!--            <id>nexus-releases</id>-->
+<!--            <name>WSO2 Release Distribution Repository</name>-->
+<!--            <url>http://maven.wso2.org/nexus/service/local/staging/deploy/maven2/</url>-->
+<!--        </repository>-->
+<!--        <snapshotRepository>-->
+<!--            <id>wso2.snapshots</id>-->
+<!--            <name>Apache Snapshot Repository</name>-->
+<!--            <url>http://maven.wso2.org/nexus/content/repositories/snapshots/</url>-->
+<!--        </snapshotRepository>-->
+<!--    </distributionManagement>-->
     <distributionManagement>
         <repository>
-            <id>nexus-releases</id>
-            <name>WSO2 Release Distribution Repository</name>
-            <url>http://maven.wso2.org/nexus/service/local/staging/deploy/maven2/</url>
+            <id>nexus</id>
+            <name>Releases</name>
+            <url>http://localhost:8081/repository/maven-releases</url>
         </repository>
         <snapshotRepository>
-            <id>wso2.snapshots</id>
-            <name>Apache Snapshot Repository</name>
-            <url>http://maven.wso2.org/nexus/content/repositories/snapshots/</url>
+            <id>nexus</id>
+            <name>Snapshot</name>
+            <url>http://localhost:8081/repository/maven-snapshots</url>
         </snapshotRepository>
     </distributionManagement>
 </project>
