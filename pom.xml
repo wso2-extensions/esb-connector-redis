@@ -380,16 +380,28 @@
             </releases>
         </repository>
     </repositories>
+<!--    <distributionManagement>-->
+<!--        <repository>-->
+<!--            <id>nexus-releases</id>-->
+<!--            <name>WSO2 Release Distribution Repository</name>-->
+<!--            <url>http://maven.wso2.org/nexus/service/local/staging/deploy/maven2/</url>-->
+<!--        </repository>-->
+<!--        <snapshotRepository>-->
+<!--            <id>wso2.snapshots</id>-->
+<!--            <name>Apache Snapshot Repository</name>-->
+<!--            <url>http://maven.wso2.org/nexus/content/repositories/snapshots/</url>-->
+<!--        </snapshotRepository>-->
+<!--    </distributionManagement>-->
     <distributionManagement>
         <repository>
-            <id>nexus-releases</id>
-            <name>WSO2 Release Distribution Repository</name>
-            <url>http://maven.wso2.org/nexus/service/local/staging/deploy/maven2/</url>
+            <id>nexus</id>
+            <name>Releases</name>
+            <url>http://localhost:8081/repository/maven-releases</url>
         </repository>
         <snapshotRepository>
-            <id>wso2.snapshots</id>
-            <name>Apache Snapshot Repository</name>
-            <url>http://maven.wso2.org/nexus/content/repositories/snapshots/</url>
+            <id>nexus</id>
+            <name>Snapshot</name>
+            <url>http://localhost:8081/repository/maven-snapshots</url>
         </snapshotRepository>
     </distributionManagement>
 </project>
